@@ -38,7 +38,7 @@ class CastStreamer:
 
     @staticmethod
     def get_current_user():
-        return os.environ.get("USER", "ramord")
+        return "ramordcommunity"
 
     @staticmethod
     def get_current_password():

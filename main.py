@@ -19,12 +19,25 @@ from discovery import DeviceScanner, DiscoveredDevice
 from streamer import CastStreamer
 from display_mgr import DisplayManager
 
+def detect_system_language():
+    """Detects system language from environment (LANG/LC_ALL) falling back to 'en'."""
+    raw = os.environ.get('LC_ALL') or os.environ.get('LC_MESSAGES') or os.environ.get('LANG') or 'en'
+    code = raw.split('.')[0].split('_')[0].lower()
+    return code if code in LANGUAGES else 'en'
+
 class RamordCastWindow(Adw.ApplicationWindow):
     def __init__(self, app):
         super().__init__(application=app, title="Ramord Cast")
-        self.set_default_size(720, 780)
+        self.set_default_size(740, 820)
 
-        self.current_lang = "en"
+        # Detect PC system language, fallback to English if unknown
+        self.current_lang = detect_system_language()
+
+        # Customizable Workspace Credentials
+        self.ws_username = "ramordcommunity"
+        self.ws_password = "1234"
+        self.ws_port = 3389
+
         self.scanner = DeviceScanner(on_device_found=self._on_device_found_bg)
         self.display_mgr = DisplayManager()
         self.streamer = CastStreamer(on_status_change=self._on_stream_status_bg)
@@ -46,24 +59,35 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.header_bar = Adw.HeaderBar()
         main_box.append(self.header_bar)
 
-        # Language Menu
-        lang_menu_btn = Gtk.MenuButton()
-        lang_menu_btn.set_icon_name("preferences-desktop-locale-symbolic")
+        # Prominent Language Selector (Pill button with Flag/Language Icon and current language name)
+        self.lang_btn = Gtk.MenuButton()
+        self.lang_btn.add_css_class("flat")
+        self.lang_btn.set_tooltip_text("Language / Dil")
+
+        lang_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        lang_icon = Gtk.Image.new_from_icon_name("preferences-desktop-locale-symbolic")
+        self.lang_btn_label = Gtk.Label(label=LANGUAGES.get(self.current_lang, "English"))
+        self.lang_btn_label.add_css_class("heading")
+        lang_btn_box.append(lang_icon)
+        lang_btn_box.append(self.lang_btn_label)
+        self.lang_btn.set_child(lang_btn_box)
+
         lang_popover = Gtk.Popover()
         lang_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        lang_box.set_margin_top(6)
-        lang_box.set_margin_bottom(6)
-        lang_box.set_margin_start(6)
-        lang_box.set_margin_end(6)
+        lang_box.set_margin_top(8)
+        lang_box.set_margin_bottom(8)
+        lang_box.set_margin_start(8)
+        lang_box.set_margin_end(8)
 
         for code, label in LANGUAGES.items():
             btn = Gtk.Button(label=label)
+            btn.add_css_class("flat")
             btn.connect("clicked", self._on_change_language, code, lang_popover)
             lang_box.append(btn)
 
         lang_popover.set_child(lang_box)
-        lang_menu_btn.set_popover(lang_popover)
-        self.header_bar.pack_start(lang_menu_btn)
+        self.lang_btn.set_popover(lang_popover)
+        self.header_bar.pack_start(self.lang_btn)
 
         # Refresh Button
         self.refresh_btn = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
@@ -78,8 +102,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
 
         # Clamp Container
         clamp = Adw.Clamp()
-        clamp.set_maximum_size(680)
-        clamp.set_tightening_threshold(520)
+        clamp.set_maximum_size(700)
+        clamp.set_tightening_threshold(540)
         scrolled.set_child(clamp)
 
         content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
@@ -104,7 +128,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.proto_combo_row.connect("notify::selected", self._on_proto_changed)
         self.proto_group.add(self.proto_combo_row)
 
-        # 3. Samsung Workspace Connection Details Card (IP, User, Pass, Port)
+        # 3. Samsung Workspace Connection Details Card (IP, User, Pass, Port, Edit button)
         self.workspace_group = Adw.PreferencesGroup()
         content_box.append(self.workspace_group)
 
@@ -127,6 +151,15 @@ class RamordCastWindow(Adw.ApplicationWindow):
 
         self.ws_port_row = Adw.ActionRow()
         self.workspace_group.add(self.ws_port_row)
+
+        # Edit Credentials Row with Button
+        self.ws_edit_row = Adw.ActionRow()
+        self.edit_btn = Gtk.Button()
+        self.edit_btn.add_css_class("pill")
+        self.edit_btn.set_valign(Gtk.Align.CENTER)
+        self.edit_btn.connect("clicked", self._on_open_edit_dialog)
+        self.ws_edit_row.add_suffix(self.edit_btn)
+        self.workspace_group.add(self.ws_edit_row)
 
         # 4. Display Mode & 2nd Screen Position (Extend vs Clone, Right vs Left)
         self.mode_group = Adw.PreferencesGroup()
@@ -206,6 +239,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.set_title(t("app_title", lang))
         self.status_banner.set_title(t("app_title", lang))
 
+        self.lang_btn_label.set_label(LANGUAGES.get(lang, "English"))
+
         curr_proto_idx = self.proto_combo_row.get_selected()
         is_airplay = (curr_proto_idx == 0)
         is_workspace = (curr_proto_idx == 1)
@@ -239,11 +274,14 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.ws_ip_row.set_title(t("workspace_ip", lang))
         self.ws_ip_row.set_subtitle(self.streamer.get_local_ip())
         self.ws_user_row.set_title(t("workspace_user", lang))
-        self.ws_user_row.set_subtitle(self.streamer.get_current_user())
+        self.ws_user_row.set_subtitle(self.ws_username)
         self.ws_pass_row.set_title(t("workspace_password", lang))
-        self.ws_pass_row.set_subtitle(self.streamer.get_current_password())
+        self.ws_pass_row.set_subtitle(self.ws_password)
         self.ws_port_row.set_title(t("workspace_port", lang))
-        self.ws_port_row.set_subtitle("3389")
+        self.ws_port_row.set_subtitle(str(self.ws_port))
+
+        self.ws_edit_row.set_title(t("dialog_edit_title", lang))
+        self.edit_btn.set_label(t("btn_edit", lang))
 
         # Display Mode (Mirror vs Extend)
         curr_mode = self.mode_combo_row.get_selected()
@@ -352,6 +390,53 @@ class RamordCastWindow(Adw.ApplicationWindow):
         popover.popdown()
         self._refresh_texts()
 
+    def _on_open_edit_dialog(self, button):
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=t("dialog_edit_title", self.current_lang),
+            body=""
+        )
+
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        content.set_margin_top(12)
+        content.set_margin_bottom(12)
+        content.set_margin_start(12)
+        content.set_margin_end(12)
+
+        user_entry = Adw.EntryRow(title=t("workspace_user", self.current_lang))
+        user_entry.set_text(self.ws_username)
+        content.append(user_entry)
+
+        pass_entry = Adw.PasswordEntryRow(title=t("workspace_password", self.current_lang))
+        pass_entry.set_text(self.ws_password)
+        content.append(pass_entry)
+
+        port_entry = Adw.EntryRow(title=t("workspace_port", self.current_lang))
+        port_entry.set_text(str(self.ws_port))
+        content.append(port_entry)
+
+        dialog.set_extra_child(content)
+
+        dialog.add_response("cancel", t("btn_cancel", self.current_lang))
+        dialog.add_response("save", t("btn_save", self.current_lang))
+        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+
+        def on_response(dialog, response):
+            if response == "save":
+                new_u = user_entry.get_text().strip()
+                new_p = pass_entry.get_text().strip()
+                new_port = port_entry.get_text().strip()
+                if new_u:
+                    self.ws_username = new_u
+                if new_p:
+                    self.ws_password = new_p
+                if new_port and new_port.isdigit():
+                    self.ws_port = int(new_port)
+                self._refresh_texts()
+
+        dialog.connect("response", on_response)
+        dialog.present()
+
     def _on_manual_refresh(self, button):
         self.status_banner.set_description(t("status_scanning", self.current_lang))
         GLib.idle_add(self._scan_and_update)
@@ -414,7 +499,12 @@ class RamordCastWindow(Adw.ApplicationWindow):
             pos_keys = ["right", "left", "top", "bottom"]
             chosen_pos = pos_keys[pos_idx] if pos_idx < len(pos_keys) else "right"
 
-            success = self.streamer.start_workspace(mode=chosen_mode)
+            success = self.streamer.start_workspace(
+                mode=chosen_mode,
+                username=self.ws_username,
+                password=self.ws_password,
+                port=self.ws_port
+            )
             if success:
                 if chosen_mode == "extend":
                     threading.Timer(2.0, self.display_mgr.arrange_position, args=("Virtual-1", chosen_pos)).start()

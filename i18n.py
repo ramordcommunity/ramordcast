@@ -288,7 +288,27 @@ TRANSLATIONS = {   'app_title': {   'tr': 'Ramord Cast',
                       'de': 'Unten (Unter dem Hauptbildschirm)',
                       'es': 'Abajo (Debajo de la pantalla principal)',
                       'fr': "En bas (Sous l'écran principal)",
-                      'it': 'In basso (Sotto lo schermo principale)'}}
+                      'it': 'In basso (Sotto lo schermo principale)'},
+    'btn_edit': {'tr': 'Düzenle', 'en': 'Edit', 'de': 'Bearbeiten', 'es': 'Editar', 'fr': 'Modifier', 'it': 'Modifica'},
+    'dialog_edit_title': {   'tr': 'Workspace Bağlantı Bilgilerini Düzenle',
+                             'en': 'Edit Workspace Connection Details',
+                             'de': 'Workspace-Verbindungsdaten bearbeiten',
+                             'es': 'Editar Detalles de Conexión de Workspace',
+                             'fr': 'Modifier les détails de connexion Workspace',
+                             'it': 'Modifica i dettagli di connessione Workspace'},
+    'btn_save': {'tr': 'Kaydet', 'en': 'Save', 'de': 'Speichern', 'es': 'Guardar', 'fr': 'Enregistrer', 'it': 'Salva'},
+    'btn_cancel': {   'tr': 'İptal',
+                      'en': 'Cancel',
+                      'de': 'Abbrechen',
+                      'es': 'Cancelar',
+                      'fr': 'Annuler',
+                      'it': 'Annulla'},
+    'language_menu_title': {   'tr': 'Dil / Language',
+                               'en': 'Language',
+                               'de': 'Sprache',
+                               'es': 'Idioma',
+                               'fr': 'Langue',
+                               'it': 'Lingua'}}
 
 
 def t(key, lang="en"):
