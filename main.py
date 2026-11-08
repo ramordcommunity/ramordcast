@@ -45,11 +45,72 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.discovered_devices = {}
         self.selected_device_ip = None
 
+        self._apply_theme()
         self._build_ui()
         self._refresh_texts()
 
         # Start auto scanning
         self.scanner.start_scanning()
+
+    def _apply_theme(self):
+        """Applies RamordCommunity Dark Turquoise & Obsidian Luxury theme styling."""
+        css = b"""
+        window, .background {
+            background: radial-gradient(circle at 50% 25%, #102127 0%, #0b171b 45%, #071013 85%);
+            color: #f3f8f8;
+        }
+
+        headerbar {
+            background: rgba(7, 16, 19, 0.88);
+            border-bottom: 1px solid rgba(20, 200, 178, 0.18);
+            color: #f3f8f8;
+        }
+
+        preferencesgroup > box {
+            background: rgba(11, 23, 27, 0.65);
+            border: 1px solid rgba(20, 200, 178, 0.14);
+            border-radius: 14px;
+            padding: 4px;
+        }
+
+        .boxed-list {
+            background: rgba(11, 23, 27, 0.65);
+            border: 1px solid rgba(20, 200, 178, 0.14);
+            border-radius: 14px;
+        }
+
+        .boxed-list row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .suggested-action {
+            background: linear-gradient(135deg, #14c8b2 0%, #005a48 100%);
+            color: #071013;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 4px 15px rgba(20, 200, 178, 0.25);
+        }
+
+        .suggested-action:hover {
+            background: linear-gradient(135deg, #18e0c8 0%, #006e58 100%);
+            box-shadow: 0 4px 20px rgba(20, 200, 178, 0.4);
+        }
+
+        .destructive-action {
+            background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+            color: #ffffff;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
+        }
+        """
+        provider = Gtk.CssProvider()
+        provider.load_from_data(css)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
     def _build_ui(self):
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
