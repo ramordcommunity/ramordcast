@@ -51,8 +51,12 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self._build_ui()
         self._refresh_texts()
 
-        # Start auto scanning
+        # Defer background network scanner until window is fully rendered on screen
+        GLib.timeout_add(250, self._start_initial_scan)
+
+    def _start_initial_scan(self):
         self.scanner.start_scanning()
+        return GLib.SOURCE_REMOVE
 
     def _apply_theme(self):
         """Applies RamordCommunity Dark Turquoise & Obsidian Luxury theme styling."""

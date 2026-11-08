@@ -53,38 +53,55 @@ class DeviceScanner:
             return None, None, None
 
     def scan_once(self):
-        """Avahi-browse üzerinden Google Cast ve AirPlay servislerini tarar."""
-        # 1. Google Cast & AirPlay servislerini tara
-        services = ['_googlecast._tcp', '_airplay._tcp']
+        """Avahi-browse üzerinden Google Cast ve AirPlay servislerini hızlıca tarar."""
+        import re
+        services = ['_airplay._tcp', '_googlecast._tcp']
         for svc in services:
             try:
                 cmd = ['avahi-browse', '-rpt', svc]
-                res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=3)
+                res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=2)
                 for line in res.stdout.splitlines():
                     if line.startswith('='):
                         parts = line.split(';')
                         if len(parts) >= 9:
                             ip = parts[7]
                             port = int(parts[8])
-                            if ":" in ip: # IPv6 adreslerini atla
+                            if ":" in ip: # Skip IPv6
                                 continue
+
+                            raw_name = parts[3]
+                            name = raw_name.replace("\\032", " ").replace("\\047", "'")
+
+                            # Parse model and device ID directly from TXT records (instant, 0ms)
+                            model_match = re.search(r'\"(?:model|md)=([^\"]+)\"', line)
+                            model = model_match.group(1) if model_match else ("AirPlay Device" if "airplay" in svc else "Cast Device")
                             
-                            # Cihaz bilgilerini zenginleştir
-                            name, model, wifi_mac = self._query_samsung_info(ip)
-                            if not name:
-                                raw_name = parts[3]
-                                name = raw_name.replace("\\032", " ").replace("\\047", "'")
-                                model = "AirPlay Device" if "airplay" in svc else "Chromecast / Cast"
-                                wifi_mac = None
+                            mac_match = re.search(r'\"(?:deviceid|id)=([^\"]+)\"', line)
+                            wifi_mac = mac_match.group(1) if mac_match else None
 
                             dev = DiscoveredDevice(name=name, ip=ip, port=port, model=model, wifi_mac=wifi_mac)
                             self.devices[ip] = dev
                             if self.on_device_found:
                                 self.on_device_found(dev)
+
+                            # Enrich with Samsung port 8001 info asynchronously in background
+                            if "samsung" in line.lower() or "samsung" in name.lower():
+                                threading.Thread(target=self._async_enrich_samsung, args=(ip, dev), daemon=True).start()
             except Exception:
                 pass
 
         return list(self.devices.values())
+
+    def _async_enrich_samsung(self, ip, dev):
+        name, model, wifi_mac = self._query_samsung_info(ip)
+        if name and (name != dev.name or model != dev.model):
+            dev.name = name
+            if model:
+                dev.model = model
+            if wifi_mac:
+                dev.wifi_mac = wifi_mac
+            if self.on_device_found:
+                self.on_device_found(dev)
 
     def _scan_loop(self):
         while self.running:
