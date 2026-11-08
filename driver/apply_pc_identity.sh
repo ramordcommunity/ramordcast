@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -e
 
-echo "=== RamordCast wpa_supplicant PC Kimliği ve WFD Miracast Yapılandırıcısı ==="
+echo "=== RamordCast wpa_supplicant PC Identity & WFD Miracast Configurator ==="
 
 if [ "$EUID" -ne 0 ]; then
-    echo "Lütfen bu betiği sudo ile çalıştırın:"
+    echo "Please run this script with sudo privileges:"
     echo "  sudo bash $0"
     exit 1
 fi
 
-echo "[1/4] /etc/wpa_supplicant/wpa_supplicant.conf PC + WFD Source olarak yapılandırılıyor..."
+echo "[1/4] Configuring /etc/wpa_supplicant/wpa_supplicant.conf as PC + WFD Source..."
 mkdir -p /etc/wpa_supplicant
 mkdir -p /run/wpa_supplicant
 chmod 775 /run/wpa_supplicant
@@ -30,7 +30,7 @@ p2p_oper_channel=36
 p2p_go_intent=1
 EOF
 
-echo "[2/4] systemd wpa_supplicant override ayarlanıyor..."
+echo "[2/4] Setting systemd wpa_supplicant override..."
 mkdir -p /etc/systemd/system/wpa_supplicant.service.d
 cat << 'EOF' > /etc/systemd/system/wpa_supplicant.service.d/override.conf
 [Service]
@@ -40,7 +40,7 @@ ExecStartPre=/usr/bin/chmod 775 /run/wpa_supplicant
 ExecStart=/usr/bin/wpa_supplicant -u -s -c /etc/wpa_supplicant/wpa_supplicant.conf -O /run/wpa_supplicant
 EOF
 
-echo "[3/4] wpa_supplicant servisi yeniden başlatılıyor..."
+echo "[3/4] Restarting wpa_supplicant service..."
 systemctl daemon-reload
 systemctl restart wpa_supplicant
 sleep 2
@@ -51,12 +51,12 @@ chgrp wheel /run/wpa_supplicant 2>/dev/null || true
 chmod 775 /run/wpa_supplicant/* 2>/dev/null || true
 chgrp wheel /run/wpa_supplicant/* 2>/dev/null || true
 
-echo "[4/4] WFD Subelement ve PC Kimliği uygulanıyor..."
+echo "[4/4] Applying WFD Subelement and PC Identity..."
 wpa_cli -p /run/wpa_supplicant -i wlan0 p2p_set wfd_subelem 0 000600101c440032 2>/dev/null || true
 wpa_cli -p /run/wpa_supplicant -i wlan0 set wfd_device_type 1-0050F204-1 2>/dev/null || true
 
 echo "=========================================================="
-echo " BAŞARILI! Cihaz türü: 1-0050F204-1 (Category 1: Computer / PC)"
-echo " WFD Modu: wifi_display=1 (Wi-Fi Display Miracast Source)"
-echo " Cihaz adı: Ramord-PC"
+echo " SUCCESS: Device Type: 1-0050F204-1 (Category 1: Computer / PC)"
+echo " WFD Mode: wifi_display=1 (Wi-Fi Display Miracast Source)"
+echo " Device Name: Ramord-PC"
 echo "=========================================================="

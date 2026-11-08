@@ -19,7 +19,7 @@ PORT = 8088
 IP = "192.168.1.101"
 
 HTML_TEMPLATE = """<!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -69,7 +69,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
     <img id="stream-img" src="/stream" alt="Live Screen Stream" />
-    <button id="fullscreen-btn" onclick="toggleFullscreen()">⛶ Tam Ekran / Fullscreen</button>
+    <button id="fullscreen-btn" onclick="toggleFullscreen()">[Fullscreen]</button>
 
     <script>
         const btn = document.getElementById('fullscreen-btn');

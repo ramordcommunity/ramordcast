@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Ramord Cast - Ultra Düşük Gecikmeli Samsung ve Tizen Ekran Yansıtıcı
-(AirPlay 2, Samsung Workspace RDP, Miracast WFD, Google Cast, GTK4 + Libadwaita, 6 Dil Desteği)
+Ramord Cast - Ultra-Low-Latency Display Mirroring & Wireless Casting for Samsung Tizen & Linux
+(AirPlay 2, Samsung Workspace RDP, Miracast WFD, Google Cast, GTK4 + Libadwaita, Multi-Language Support)
 """
 
 import sys
@@ -24,7 +24,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         super().__init__(application=app, title="Ramord Cast")
         self.set_default_size(760, 780)
 
-        self.current_lang = "tr"
+        self.current_lang = "en"
         self.scanner = DeviceScanner(on_device_found=self._on_device_found_bg)
         self.display_mgr = DisplayManager()
         self.streamer = CastStreamer(on_status_change=self._on_stream_status_bg)

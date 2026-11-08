@@ -1,9 +1,9 @@
-# rtw88 downstream 🐧
+# rtw88 downstream 
 ### This is a downstream repo with a primary purpose of supporting development, testing and maintenance for the Realtek rtw88 series of WiFi 5 drivers in the Linux kernel.
 
-🌟 The code in this repo stays in sync with the `wireless-next` repository, with additional changes to accommodate kernel API changes over time.
+ The code in this repo stays in sync with the `wireless-next` repository, with additional changes to accommodate kernel API changes over time.
 
-📌 **Note**: The `wireless-next` repo contains the code set for the ***next*** kernel version. If kernel 6.X is out, kernel mainline repo is on 6.X+1-rcY, and `wireless-next` targets kernel 6.X+2 material.
+ **Note**: The `wireless-next` repo contains the code set for the ***next*** kernel version. If kernel 6.X is out, kernel mainline repo is on 6.X+1-rcY, and `wireless-next` targets kernel 6.X+2 material.
 
 ---
 
@@ -19,10 +19,10 @@ Compatible with **Linux kernel versions 5.4 and newer** as long as your distro h
 
 ---
 
-## Issues 🚨
+## Issues 
 Report problems in Issues after you have checked the [Q&A](#qa) at bottom of this README.
 
-⚠️ If you see a line such as:
+️ If you see a line such as:
 
 `make[1]: *** /lib/modules/5.17.5-300.fc36.x86_64/build: No such file or directory.` **Stop.**
 
@@ -32,7 +32,7 @@ Use the following instructions for that step.
 
 ## Installation Guide
 
-### Prerequisites 📋
+### Prerequisites 
 Below are prerequisites for common Linux distributions __before__  installing this driver.
 
 #### Ubuntu
@@ -75,7 +75,7 @@ sudo apt install -y raspberrypi-kernel-headers build-essential git
 
 ---
 
-### Installation Using DKMS 🔄
+### Installation Using DKMS 
 Installing this driver via DKMS is highly recommended, especially if Secure Boot is enabled on your machine. Using DKMS (Dynamic Kernel Module Support) ensures that the `rtw88` kernel modules are automatically rebuilt and re-signed whenever the Linux kernel is updated. Without DKMS, these drivers would stop working after each kernel update, requiring manual re-compilation and re-signing. DKMS should be available through your distribution’s package manager. You can learn more about DKMS [here](https://github.com/dell/dkms).
 
 1. Install `dkms` and all its required dependencies using your preferred package manager.
@@ -117,7 +117,7 @@ Installing this driver via DKMS is highly recommended, especially if Secure Boot
 
 ---
 
-### Installation Using make🛠
+### Installation Using make
 
 You will need to rebuild and reinstall the driver manually after each kernel updates if you choose this way to install the driver. This method is **NOT RECOMMENDED** for systems with Secure Boot enabled.
 
@@ -141,7 +141,7 @@ sudo cp rtw88.conf /etc/modprobe.d/
 ```
 ---
 
-### Installation for Arch-based Distros 🛠
+### Installation for Arch-based Distros 
 
 This is the best way for Arch-based distro users to install this driver, one more step is required after running `makepkg -si` if Secure Boot is enabled on your machine: Enroll the MOK. Please see the step 6 in [Installation Using DKMS](#installation-using-dkms-) for details.
 
@@ -159,10 +159,10 @@ makepkg -si
 ## Important Information
 Below is important information for using this driver.
 
-### 1. Blacklisting 🚫
+### 1. Blacklisting 
 The configuration file `rtw88.conf` in `/etc/modprobe.d/` will blacklist all in-kernel rtw88 drivers, however, it will not blacklist out-of-kernel vendor drivers. You will need to uninstall any out-of-kernel vendor drivers that you have installed that may conflict. 
 
-### 2. Recovery Problems After Sleep/Hibernation 🛌
+### 2. Recovery Problems After Sleep/Hibernation 
 Some BIOSs have trouble changing power state from D3hot to D0. If you have this problem, run 
 
 ``` bash
@@ -171,7 +171,7 @@ sudo cp reload_rtw88.sh /usr/lib/systemd/system-sleep/
 
 That script will unload the driver before sleep or hibernation, and reload it following resumption.
 
-### 3. How To Load/Unload Kernel Modules (aka Drivers)🪛
+### 3. How To Load/Unload Kernel Modules (aka Drivers)
 
 The kernel modules for RTL8821CU are used to demonstrate here, you need to change the module name according to the chip that your Wi-Fi adapter uses.
 

@@ -1,54 +1,52 @@
-# Ramord Cast 🖥️📡
+# Ramord Cast
 
-**Ultra-Low Latency Screen Mirroring & Dual-Display Solution for Samsung Tizen Smart TVs & Monitors on Linux.**
-
-*Linux için Ultra Düşük Gecikmeli Samsung ve Tizen OS Ekran Yansıtma ve İkinci Ekran Aracı.*
+Ultra-low latency screen mirroring and dual-display solution for Samsung Tizen Smart TVs and monitors on Linux.
 
 ---
 
-## ⚡ Hızlı Kurulum / Quick Installation (Tek Komut)
+## Quick Installation (Single Command)
 
-Herhangi bir Linux dağıtımında (Arch, CachyOS, Ubuntu, Debian, Fedora, Mint) Ramord Cast'i tüm bağımlılıkları ve masaüstü kısayoluyla birlikte tek komutla kurabilirsiniz:
+On any modern Linux distribution (Arch, CachyOS, Ubuntu, Debian, Fedora, Mint), install Ramord Cast along with its system dependencies and desktop launcher using the automated installer:
 
 ```bash
-git clone https://github.com/ramordcommunity/RamordCast.git
-cd RamordCast
+git clone https://github.com/ramordcommunity/ramordcast.git
+cd ramordcast
 bash install.sh
 ```
 
-Kurulum tamamlandıktan sonra:
-- **Başlat Menüsünden:** `Ramord Cast` simgesine tıklayarak açabilirsiniz.
-- **Terminalden:** Doğrudan `ramordcast` yazarak başlatabilirsiniz.
+After installation completes:
+- **Application Menu:** Launch `Ramord Cast` directly from your desktop application launcher.
+- **Terminal:** Run `ramordcast` from anywhere.
 
 ---
 
-## 🚀 Features / Özellikler
+## Features
 
-- **Samsung Tizen Native Integration:** Designed and optimized specifically for Samsung Tizen OS Smart Monitors (e.g., M7 / LS43DM702, M8, Neo QLED, Smart TVs).
+- **Samsung Tizen Native Integration:** Optimized for Samsung Tizen OS Smart Monitors (e.g., M7 / LS43DM702, M8, Neo QLED, Smart TVs).
 - **Multiple Protocols Supported:**
-  - 🍏 **Apple AirPlay 2:** Zero-PIN saved-credentials, hardware-accelerated 60 FPS, sub-25ms latency.
-  - 📶 **Wi-Fi Direct / Miracast (WFD):** Hardware P2P display transmission with custom PC and Samsung Galaxy identity configurations.
-  - 🖥️ **Samsung Workspace (RDP / PC on TV):** Virtual screen, keyboard, and mouse integration via TLS RDP.
-- **Hardware Acceleration:** Native VA-API / Vulkan hardware encoding support (AMD Radeon, Intel QuickSync) for buttery-smooth 60 FPS uncompressed streaming.
+  - **Apple AirPlay 2:** Zero-PIN saved-credentials, hardware-accelerated 60 FPS, sub-25ms latency.
+  - **Wi-Fi Direct / Miracast (WFD):** Hardware P2P display transmission with custom PC and Samsung Galaxy identity configurations.
+  - **Samsung Workspace (RDP / PC on TV):** Virtual display, keyboard, and mouse integration via TLS RDP.
+- **Hardware Acceleration:** Native VA-API / Vulkan hardware encoding (AMD Radeon, Intel QuickSync) for smooth 60 FPS streaming.
 - **Flexible Display Modes:**
-  - Clone Display (Yansıtma / Aynalama)
-  - Extend Display (Bağımsız İkinci Ekran)
-  - Single Window Mirroring (Tek Pencere)
-- **Automatic Multi-Monitor Alignment:** Directional placement (Right, Left, Above, Below) dynamically handled by Wayland/KScreen.
-- **Realtek Wi-Fi Direct (P2P) DKMS Drivers:** Includes patched and DKMS-automated `rtw88` drivers for Realtek RTL8822CE/RTL8821CE Linux chipsets.
-- **6 Languages Built-in (Çoklu Dil Desteği):**
-  - 🇹🇷 Türkçe (`tr`)
-  - 🇬🇧 English (`en`)
-  - 🇩🇪 Deutsch (`de`)
-  - 🇪🇸 Español (`es`)
-  - 🇫🇷 Français (`fr`)
-  - 🇮🇹 Italiano (`it`)
+  - Clone Display (Mirroring)
+  - Extend Display (Independent secondary display)
+  - Single Window Mirroring
+- **Automatic Multi-Monitor Alignment:** Directional placement (Right, Left, Above, Below) dynamically handled via Wayland/KScreen.
+- **Realtek Wi-Fi Direct (P2P) DKMS Drivers:** Includes patched and DKMS-automated `rtw88` drivers for Realtek RTL8822CE and RTL8821CE Linux chipsets.
+- **Multi-Language Interface (6 Languages):**
+  - English (`en`) - Default
+  - Turkish (`tr`)
+  - German (`de`)
+  - Spanish (`es`)
+  - French (`fr`)
+  - Italian (`it`)
 
 ---
 
-## 🛠️ Manuel Paket Kurulumu / Manual Package Requirements
+## Manual Package Installation
 
-Eğer paketleri kendi paket yöneticinizle manuel kurmak isterseniz:
+If you prefer to install dependencies manually using your distribution package manager:
 
 ### Arch Linux / CachyOS / Manjaro:
 ```bash
@@ -68,9 +66,9 @@ sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pip
 
 ---
 
-## 📶 Realtek Wi-Fi Direct Sürücü Yaması (İsteğe Bağlı)
+## Realtek Wi-Fi Direct Driver Patch (Optional)
 
-Eğer bilgisayarınızda Realtek RTL8822CE veya RTL8821CE kablosuz kartı varsa ve Linux çekirdeği Wi-Fi Direct (P2P) özelliğini açmıyorsa, paket içindeki otomatik DKMS yükleyicisini çalıştırabilirsiniz:
+If your system uses a Realtek RTL8822CE or RTL8821CE wireless card and your Linux kernel does not enable Wi-Fi Direct (P2P), you can run the included automated DKMS installer:
 
 ```bash
 sudo bash driver/install_driver.sh
@@ -78,6 +76,6 @@ sudo bash driver/install_driver.sh
 
 ---
 
-## 📄 License
+## License
 
-GPL-3.0 License.
+GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.

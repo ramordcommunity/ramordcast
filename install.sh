@@ -2,18 +2,18 @@
 set -e
 
 echo "=========================================================="
-echo "          🖥️  Ramord Cast - Otomatik Kurulum Aracı         "
+echo "          Ramord Cast - Automated Installation Tool      "
 echo "   Ultra-Low Latency Samsung & Tizen Screen Mirroring     "
 echo "=========================================================="
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# 1. Dağıtım tespiti ve paket kurulumu
-echo "[1/4] Sistem bağımlılıkları kontrol ediliyor ve kuruluyor..."
+# 1. Distribution detection and dependency installation
+echo "[1/4] Checking and installing system dependencies..."
 
 install_packages() {
     if command -v pacman >/dev/null 2>&1; then
-        echo "--> Arch / CachyOS / Manjaro tespit edildi."
+        echo "--> Detected Arch Linux / CachyOS / Manjaro."
         sudo pacman -S --needed --noconfirm \
             python \
             python-gobject \
@@ -28,7 +28,7 @@ install_packages() {
             gst-plugins-ugly \
             dkms
     elif command -v apt-get >/dev/null 2>&1; then
-        echo "--> Ubuntu / Debian / Mint tespit edildi."
+        echo "--> Detected Ubuntu / Debian / Linux Mint."
         sudo apt-get update
         sudo apt-get install -y \
             python3 \
@@ -45,7 +45,7 @@ install_packages() {
             gstreamer1.0-plugins-ugly \
             dkms
     elif command -v dnf >/dev/null 2>&1; then
-        echo "--> Fedora / RHEL tespit edildi."
+        echo "--> Detected Fedora / RHEL."
         sudo dnf install -y \
             python3 \
             python3-gobject \
@@ -59,14 +59,14 @@ install_packages() {
             gstreamer1-plugins-ugly-free \
             dkms
     else
-        echo "⚠️  Paket yöneticisi otomatik algılanamadı. Lütfen Python, GTK4 ve GStreamer paketlerini manuel kurun."
+        echo "[!] Package manager not recognized. Please install Python, GTK4, Libadwaita, and GStreamer packages manually."
     fi
 }
 
 install_packages
 
-# 2. Sistem komutu (CLI Launcher)
-echo "[2/4] Sistem komutu (ramordcast) yapılandırılıyor..."
+# 2. System CLI command
+echo "[2/4] Setting up system command (/usr/local/bin/ramordcast)..."
 LAUNCHER_PATH="/usr/local/bin/ramordcast"
 sudo bash -c "cat << 'EOF' > $LAUNCHER_PATH
 #!/usr/bin/env bash
@@ -74,8 +74,8 @@ python3 \"$SCRIPT_DIR/main.py\" \"\$@\"
 EOF"
 sudo chmod +x "$LAUNCHER_PATH"
 
-# 3. Masaüstü Başlatıcı (Desktop Shortcut)
-echo "[3/4] Masaüstü kısayolu oluşturuluyor..."
+# 3. Desktop Application Shortcut
+echo "[3/4] Creating desktop application shortcut..."
 APPLICATIONS_DIR="$HOME/.local/share/applications"
 mkdir -p "$APPLICATIONS_DIR"
 
@@ -83,8 +83,8 @@ cat << EOF > "$APPLICATIONS_DIR/com.ramord.cast.desktop"
 [Desktop Entry]
 Name=Ramord Cast
 Comment=Ultra Low-Latency Samsung & Tizen Screen Mirror
-Comment[tr]=Ultra Düşük Gecikmeli Samsung & Tizen Ekran Yansıtıcı
 Comment[en]=Ultra Low-Latency Samsung & Tizen Screen Mirror
+Comment[tr]=Ultra Düşük Gecikmeli Samsung & Tizen Ekran Yansıtıcı
 Comment[de]=Ultra-Low-Latency Samsung & Tizen Bildschirmspiegelung
 Comment[es]=Espejo de Pantalla Samsung & Tizen de Ultra Baja Latencia
 Comment[fr]=Miroir d'Écran Samsung & Tizen à Ultra Faible Latence
@@ -103,20 +103,20 @@ if command -v update-desktop-database >/dev/null 2>&1; then
     update-desktop-database "$APPLICATIONS_DIR" 2>/dev/null || true
 fi
 
-# 4. Donanım / Sürücü Kontrolü (Realtek Wi-Fi Direct)
-echo "[4/4] Donanım uyumluluğu kontrol ediliyor..."
+# 4. Hardware and driver compatibility check
+echo "[4/4] Checking hardware compatibility..."
 if lspci | grep -qi "RTL8822CE\|RTL8821CE"; then
     echo ""
-    echo "⚠️  Sisteminizde Realtek Wi-Fi yongası tespit edildi."
-    echo "   Linux'ta Wi-Fi Direct (P2P) için sürücü yaması gerekebilir."
-    echo "   Kurmak için: sudo bash $SCRIPT_DIR/driver/install_driver.sh"
+    echo "[!] Realtek Wi-Fi chipset detected."
+    echo "    Linux Wi-Fi Direct (P2P) patch may be required for Miracast."
+    echo "    To install: sudo bash $SCRIPT_DIR/driver/install_driver.sh"
 fi
 
 echo ""
 echo "=========================================================="
-echo " 🎉 KURULUM BAŞARIYLA TAMAMLANDI!                         "
+echo " INSTALLATION COMPLETED SUCCESSFULLY!                     "
 echo "=========================================================="
-echo " Ramord Cast uygulamasını başlatmak için:"
-echo "   1) Başlat menüsünden 'Ramord Cast' simgesine tıklayın,"
-echo "   2) Veya terminalde doğrudan 'ramordcast' yazın."
+echo " To start Ramord Cast:"
+echo "   1) Launch 'Ramord Cast' from your application menu,"
+echo "   2) Or type 'ramordcast' in your terminal."
 echo "=========================================================="
