@@ -29,6 +29,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
     def __init__(self, app):
         super().__init__(application=app, title="Ramord Cast")
         self.set_default_size(740, 820)
+        self.set_icon_name("ramordcast")
 
         # Detect PC system language, fallback to English if unknown
         self.current_lang = detect_system_language()

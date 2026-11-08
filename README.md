@@ -82,6 +82,8 @@ However, due to Samsung Tizen OS hardware scaler limitations and proprietary Wi-
 
 The project is fully open-sourced for developers, reverse engineers, and the open-source community to take this research forward. Best of luck to anyone continuing this endeavor!
 
+For a full breakdown of all reverse-engineering attempts, protocol investigations, and a comprehensive matrix of **what is currently active vs what was dropped due to hardware constraints**, please read the [Research Notes & Development Log](RESEARCH_NOTES.md).
+
 ---
 
 ## Contact & Support

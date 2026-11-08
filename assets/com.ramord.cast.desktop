@@ -1,16 +1,16 @@
 [Desktop Entry]
 Name=Ramord Cast
-Comment=Ultra Low-Latency Samsung & Tizen Screen Mirror
-Comment[tr]=Ultra Düşük Gecikmeli Samsung & Tizen Ekran Yansıtıcı
-Comment[en]=Ultra Low-Latency Samsung & Tizen Screen Mirror
-Comment[de]=Ultra-Low-Latency Samsung & Tizen Bildschirmspiegelung
-Comment[es]=Espejo de Pantalla Samsung & Tizen de Ultra Baja Latencia
-Comment[fr]=Miroir d'Écran Samsung & Tizen à Ultra Faible Latence
-Comment[it]=Duplicazione Schermo Samsung & Tizen ad Ultra Bassa Latenza
+Comment=Ultra Low-Latency Screen Mirroring & Virtual Second Monitor
+Comment[tr]=Ultra Düşük Gecikmeli Ekran Yansıtıcı ve 2. Sanal Monitör
+Comment[en]=Ultra Low-Latency Screen Mirroring & Virtual Second Monitor
+Comment[de]=Ultra-Low-Latency Bildschirmspiegelung & Virtueller Zweitmonitor
+Comment[es]=Espejo de Pantalla de Ultra Baja Latencia y Segundo Monitor Virtual
+Comment[fr]=Miroir d'Écran à Ultra Faible Latence et Deuxième Moniteur Virtuel
+Comment[it]=Duplicazione Schermo ad Ultra Bassa Latenza e Secondo Monitor Virtuale
 Exec=ramordcast
-Icon=ramordcast
+Icon=/home/ramordser/Projeler/RamordCast/assets/ramordcast.png
 Terminal=false
 Type=Application
 Categories=AudioVideo;Video;Network;Utility;
-Keywords=cast;mirror;samsung;tizen;display;screen;
+Keywords=cast;mirror;airplay;workspace;samsung;display;
 StartupNotify=true
