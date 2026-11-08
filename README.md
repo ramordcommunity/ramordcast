@@ -57,18 +57,18 @@ If you prefer to install dependencies manually:
 
 ### Arch Linux / CachyOS / Manjaro:
 ```bash
-sudo pacman -S --needed python python-gobject python-requests gtk4 libadwaita pipewire gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly
+sudo pacman -S --needed python python-gobject python-requests gtk4 libadwaita pipewire
 ```
 
 ### Ubuntu / Debian / Linux Mint:
 ```bash
 sudo apt update
-sudo apt install -y python3 python3-gi python3-gi-cairo python3-requests gir1.2-gtk-4.0 gir1.2-adw-1 pipewire gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
+sudo apt install -y python3 python3-gi python3-requests gir1.2-gtk-4.0 gir1.2-adw-1 pipewire
 ```
 
 ### Fedora:
 ```bash
-sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pipewire gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pipewire
 ```
 
 ---

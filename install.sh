@@ -20,30 +20,17 @@ install_packages() {
             python-requests \
             gtk4 \
             libadwaita \
-            pipewire \
-            gstreamer \
-            gst-plugins-base \
-            gst-plugins-good \
-            gst-plugins-bad \
-            gst-plugins-ugly \
-            dkms
+            pipewire
     elif command -v apt-get >/dev/null 2>&1; then
         echo "--> Detected Ubuntu / Debian / Linux Mint."
         sudo apt-get update
         sudo apt-get install -y \
             python3 \
             python3-gi \
-            python3-gi-cairo \
             python3-requests \
             gir1.2-gtk-4.0 \
             gir1.2-adw-1 \
-            pipewire \
-            gstreamer1.0-tools \
-            gstreamer1.0-plugins-base \
-            gstreamer1.0-plugins-good \
-            gstreamer1.0-plugins-bad \
-            gstreamer1.0-plugins-ugly \
-            dkms
+            pipewire
     elif command -v dnf >/dev/null 2>&1; then
         echo "--> Detected Fedora / RHEL."
         sudo dnf install -y \
@@ -52,14 +39,9 @@ install_packages() {
             python3-requests \
             gtk4 \
             libadwaita \
-            pipewire \
-            gstreamer1-plugins-base \
-            gstreamer1-plugins-good \
-            gstreamer1-plugins-bad-free \
-            gstreamer1-plugins-ugly-free \
-            dkms
+            pipewire
     else
-        echo "[!] Package manager not recognized. Please install Python, GTK4, Libadwaita, and GStreamer packages manually."
+        echo "[!] Package manager not recognized. Please install Python, GTK4, Libadwaita, and PipeWire manually."
     fi
 }
 
