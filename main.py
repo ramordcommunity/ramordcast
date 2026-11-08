@@ -7,6 +7,7 @@ Ramord Cast - Display Mirroring & Wireless Virtual Second Monitor for Samsung Ti
 
 import sys
 import os
+import signal
 import threading
 import gi
 
@@ -714,6 +715,13 @@ class RamordCastWindow(Adw.ApplicationWindow):
     def _on_stream_status_bg(self, is_streaming, target_dev):
         GLib.idle_add(self._refresh_texts)
 
+    def do_close_request(self):
+        try:
+            self.streamer.stop_stream()
+        except Exception:
+            pass
+        return False
+
 
 class RamordCastApp(Adw.Application):
     def __init__(self):
@@ -721,14 +729,34 @@ class RamordCastApp(Adw.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
-        win = self.props.active_window
-        if not win:
+        windows = self.get_windows()
+        if not windows:
             win = RamordCastWindow(self)
-        win.present()
+            win.present()
+        else:
+            # Toggle behavior: if already running/open, close application cleanly
+            for w in list(windows):
+                w.close()
+            self.quit()
 
 
 def main():
     app = RamordCastApp()
+
+    def handle_sig(sig, frame):
+        for w in list(app.get_windows()):
+            try:
+                w.close()
+            except Exception:
+                pass
+        app.quit()
+
+    try:
+        signal.signal(signal.SIGINT, handle_sig)
+        signal.signal(signal.SIGTERM, handle_sig)
+    except Exception:
+        pass
+
     return app.run(sys.argv)
 
 
