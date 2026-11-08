@@ -103,15 +103,6 @@ if command -v update-desktop-database >/dev/null 2>&1; then
     update-desktop-database "$APPLICATIONS_DIR" 2>/dev/null || true
 fi
 
-# 4. Hardware and driver compatibility check
-echo "[4/4] Checking hardware compatibility..."
-if lspci | grep -qi "RTL8822CE\|RTL8821CE"; then
-    echo ""
-    echo "[!] Realtek Wi-Fi chipset detected."
-    echo "    Linux Wi-Fi Direct (P2P) patch may be required for Miracast."
-    echo "    To install: sudo bash $SCRIPT_DIR/driver/install_driver.sh"
-fi
-
 echo ""
 echo "=========================================================="
 echo " INSTALLATION COMPLETED SUCCESSFULLY!                     "

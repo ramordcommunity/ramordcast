@@ -33,7 +33,6 @@ After installation completes:
   - Extend Display (Independent secondary display)
   - Single Window Mirroring
 - **Automatic Multi-Monitor Alignment:** Directional placement (Right, Left, Above, Below) dynamically handled via Wayland/KScreen.
-- **Realtek Wi-Fi Direct (P2P) DKMS Drivers:** Includes patched and DKMS-automated `rtw88` drivers for Realtek RTL8822CE and RTL8821CE Linux chipsets.
 - **Multi-Language Interface (6 Languages):**
   - English (`en`) - Default
   - Turkish (`tr`)
@@ -50,28 +49,18 @@ If you prefer to install dependencies manually using your distribution package m
 
 ### Arch Linux / CachyOS / Manjaro:
 ```bash
-sudo pacman -S --needed python python-gobject python-requests gtk4 libadwaita pipewire gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly dkms
+sudo pacman -S --needed python python-gobject python-requests gtk4 libadwaita pipewire gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly
 ```
 
 ### Ubuntu / Debian / Linux Mint:
 ```bash
 sudo apt update
-sudo apt install -y python3 python3-gi python3-gi-cairo python3-requests gir1.2-gtk-4.0 gir1.2-adw-1 pipewire gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly dkms
+sudo apt install -y python3 python3-gi python3-gi-cairo python3-requests gir1.2-gtk-4.0 gir1.2-adw-1 pipewire gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
 ```
 
 ### Fedora:
 ```bash
-sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pipewire gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free dkms
-```
-
----
-
-## Realtek Wi-Fi Direct Driver Patch (Optional)
-
-If your system uses a Realtek RTL8822CE or RTL8821CE wireless card and your Linux kernel does not enable Wi-Fi Direct (P2P), you can run the included automated DKMS installer:
-
-```bash
-sudo bash driver/install_driver.sh
+sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pipewire gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
 ```
 
 ---

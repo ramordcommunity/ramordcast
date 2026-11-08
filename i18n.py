@@ -24,8 +24,8 @@ TRANSLATIONS = {
     },
     "app_subtitle": {
         "tr": "Samsung ve Tizen Ultra Düşük Gecikmeli Ekran Bağlantısı",
-        "en": "Samsung & Tizen Ultra Low-Latency Screen Connection",
-        "de": "Samsung & Tizen Ultra-Low-Latency Bildschirmverbindung",
+        "en": "Samsung and Tizen Ultra Low-Latency Screen Connection",
+        "de": "Samsung und Tizen Ultra-Low-Latency Bildschirmverbindung",
         "es": "Conexión de Pantalla Samsung y Tizen de Ultra Baja Latencia",
         "fr": "Connexion d'Écran Samsung et Tizen à Ultra Faible Latence",
         "it": "Connessione Schermo Samsung e Tizen ad Ultra Bassa Latenza"
@@ -97,7 +97,7 @@ TRANSLATIONS = {
         "it": "Alterna Multi View"
     },
 
-    # Bağlantı Teknolojisi & Protokol Seçimi
+    # Bağlantı Teknolojisi and Protokol Seçimi
     "section_connection_type": {
         "tr": "Bağlantı Teknolojisi ve Protokol",
         "en": "Connection Technology and Protocol",
@@ -182,8 +182,8 @@ TRANSLATIONS = {
     # Performans, Renk ve Gecikme Ayarları
     "section_performance": {
         "tr": "Görüntü Kalitesi, Renk ve Tepki Hızı Ayarları",
-        "en": "Image Quality, Color & Latency Settings",
-        "de": "Bildqualität, Farb- & Latenzeinstellungen",
+        "en": "Image Quality, Color and Latency Settings",
+        "de": "Bildqualität, Farb- und Latenzeinstellungen",
         "es": "Ajustes de Calidad de Imagen, Color y Latencia",
         "fr": "Paramètres de Qualité d'Image, Couleur et Latence",
         "it": "Impostazioni di Qualità Immagine, Colore e Latenza"
@@ -198,8 +198,8 @@ TRANSLATIONS = {
     },
     "fps_30": {
         "tr": "30 FPS (Önerilen - Akıcı ve Takılmasız)",
-        "en": "30 FPS (Recommended - Smooth & Stutter-Free)",
-        "de": "30 FPS (Empfohlen - Flüssig & Ruckelfrei)",
+        "en": "30 FPS (Recommended - Smooth and Stutter-Free)",
+        "de": "30 FPS (Empfohlen - Flüssig und Ruckelfrei)",
         "es": "30 FPS (Recomendado - Fluido y Sin Tirones)",
         "fr": "30 FPS (Recommandé - Fluide et Sans Saccades)",
         "it": "30 FPS (Consigliato - Fluido e Senza Scatti)"
@@ -214,7 +214,7 @@ TRANSLATIONS = {
     },
     "quality_label": {
         "tr": "Renk ve Görüntü Kalitesi (Bitrate)",
-        "en": "Color & Image Quality (Bitrate)",
+        "en": "Color and Image Quality (Bitrate)",
         "de": "Farb- und Bildqualität (Bitrate)",
         "es": "Calidad de Color e Imagen (Bitrate)",
         "fr": "Qualité des Couleurs et de l'Image (Débit)",
@@ -222,8 +222,8 @@ TRANSLATIONS = {
     },
     "quality_auto": {
         "tr": "Otomatik (Önerilen - Dinamik Ağ ve Zengin Renk)",
-        "en": "Automatic (Recommended - Dynamic Network & Rich Color)",
-        "de": "Automatisch (Empfohlen - Dynamisches Netzwerk & Satte Farben)",
+        "en": "Automatic (Recommended - Dynamic Network and Rich Color)",
+        "de": "Automatisch (Empfohlen - Dynamisches Netzwerk and Satte Farben)",
         "es": "Automático (Recomendado - Red Dinámica y Color Rico)",
         "fr": "Automatique (Recommandé - Réseau Dynamique et Couleurs Riches)",
         "it": "Automatico (Consigliato - Rete Dinamica e Colori Ricchi)"
@@ -254,8 +254,8 @@ TRANSLATIONS = {
     },
     "latency_auto": {
         "tr": "Otomatik (Önerilen - Sıfır Takılma ve Pürüzsüz Senkron)",
-        "en": "Automatic (Recommended - Zero Stutter & Smooth Sync)",
-        "de": "Automatisch (Empfohlen - Null Ruckeln & Glatte Synchronisation)",
+        "en": "Automatic (Recommended - Zero Stutter and Smooth Sync)",
+        "de": "Automatisch (Empfohlen - Null Ruckeln and Glatte Synchronisation)",
         "es": "Automático (Recomendado - Cero Tirones y Sincronización Suave)",
         "fr": "Automatique (Recommandé - Zéro Saccade et Synchronisation Fluide)",
         "it": "Automatico (Consigliato - Zero Scatti e Sincronizzazione Fluida)"
@@ -278,8 +278,8 @@ TRANSLATIONS = {
     },
     "codec_label": {
         "tr": "Video ve Renk Kodlayıcı",
-        "en": "Video & Color Codec",
-        "de": "Video- & Farbcodec",
+        "en": "Video and Color Codec",
+        "de": "Video- and Farbcodec",
         "es": "Códec de Video y Color",
         "fr": "Codec Vidéo et Couleur",
         "it": "Codec Video e Colore"
@@ -294,8 +294,8 @@ TRANSLATIONS = {
     },
     "codec_h264": {
         "tr": "H.264 (Hızlı ve Donanım Hızlandırmalı)",
-        "en": "H.264 (Fast & Hardware Accelerated)",
-        "de": "H.264 (Schnell & Hardware-Beschleunigt)",
+        "en": "H.264 (Fast and Hardware Accelerated)",
+        "de": "H.264 (Schnell and Hardware-Beschleunigt)",
         "es": "H.264 (Rápido y Acelerado por HW)",
         "fr": "H.264 (Rapide et Accéléré Matériellement)",
         "it": "H.264 (Veloce e Accelerato via HW)"
