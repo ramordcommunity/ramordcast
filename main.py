@@ -103,6 +103,39 @@ class RamordCastWindow(Adw.ApplicationWindow):
             border: none;
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
         }
+
+        /* Modern Rounded Dropdowns & Popovers */
+        popover contents, popover .view, popover listview {
+            background-color: #0b171b;
+            color: #f3f8f8;
+            border-radius: 12px;
+            border: 1px solid rgba(20, 200, 178, 0.25);
+            padding: 6px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        popover listview row {
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin: 2px 0;
+            min-height: 38px;
+        }
+
+        popover listview row:selected, popover listview row:hover {
+            background: rgba(20, 200, 178, 0.18);
+            color: #14c8b2;
+        }
+
+        /* Fixed Banner Dimensions */
+        statuspage > box {
+            min-height: 120px;
+        }
+
+        statuspage .icon {
+            -gtk-icon-size: 64px;
+            min-width: 64px;
+            min-height: 64px;
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css)
