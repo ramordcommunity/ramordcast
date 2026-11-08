@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C / Kernel module build artifacts
+*.o
+*.ko
+*.mod
+*.mod.c
+*.mod.o
+*.order
+*.symvers
+.*.cmd
+.tmp_versions/
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# OS / Editor files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
