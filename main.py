@@ -226,8 +226,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
 
         # 0: Workspace (Önerilen), 1: Smart View (Galaxy), 2: Miracast (PC), 3: AirPlay
         curr_proto_idx = self.proto_combo_row.get_selected()
-        is_workspace = (curr_proto_idx == 0)
-        is_airplay = (curr_proto_idx == 3)
+        is_workspace = (curr_proto_idx == 1)
+        is_airplay = (curr_proto_idx == 0)
 
         if self.streamer.is_streaming:
             self.status_banner.set_description(t("status_connected", lang))
@@ -244,15 +244,15 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.multiview_btn.set_label(t("btn_multiview", lang))
         self.multiview_btn.set_tooltip_text(t("btn_multiview", lang))
 
-        # Protokoller
+        # Protokoller: Apple AirPlay 2 varsayılan (0. sırada)
         self.proto_group.set_title(t("section_connection_type", lang))
         self.proto_combo_row.set_title(t("section_connection_type", lang))
         while self.proto_model.get_n_items() > 0:
             self.proto_model.remove(0)
+        self.proto_model.append(t("proto_airplay", lang))
         self.proto_model.append(t("proto_workspace", lang))
         self.proto_model.append(t("proto_smartview", lang))
         self.proto_model.append(t("proto_miracast", lang))
-        self.proto_model.append(t("proto_airplay", lang))
         self.proto_combo_row.set_selected(curr_proto_idx if curr_proto_idx < 4 else 0)
 
         # Performans & Renk Ayarları
@@ -350,8 +350,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
 
     def _on_proto_changed(self, combo_row, pspec):
         idx = combo_row.get_selected()
-        is_workspace = (idx == 0)
-        is_airplay = (idx == 3)
+        is_airplay = (idx == 0)
+        is_workspace = (idx == 1)
         self.workspace_group.set_visible(is_workspace)
         self.device_group.set_visible(not is_workspace)
         self.perf_group.set_visible(is_airplay)
@@ -438,8 +438,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
             return
 
         proto_idx = self.proto_combo_row.get_selected()
-        proto_map = ["workspace", "smartview", "miracast", "airplay"]
-        chosen_proto = proto_map[proto_idx] if proto_idx < len(proto_map) else "workspace"
+        proto_map = ["airplay", "workspace", "smartview", "miracast"]
+        chosen_proto = proto_map[proto_idx] if proto_idx < len(proto_map) else "airplay"
 
         mode_idx = self.mode_combo_row.get_selected()
         modes = ["clone", "extend", "window"]

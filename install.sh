@@ -66,13 +66,21 @@ install_packages() {
 install_packages
 
 # 2. System CLI command
-echo "[2/4] Setting up system command (/usr/local/bin/ramordcast)..."
-LAUNCHER_PATH="/usr/local/bin/ramordcast"
-sudo bash -c "cat << 'EOF' > $LAUNCHER_PATH
+echo "[2/4] Setting up system command (ramordcast)..."
+BIN_DIR="$HOME/.local/bin"
+mkdir -p "$BIN_DIR"
+cat << EOF > "$BIN_DIR/ramordcast"
 #!/usr/bin/env bash
-python3 \"$SCRIPT_DIR/main.py\" \"\$@\"
-EOF"
-sudo chmod +x "$LAUNCHER_PATH"
+exec python3 "$SCRIPT_DIR/main.py" "\$@"
+EOF
+chmod +x "$BIN_DIR/ramordcast"
+
+# Try installing to /usr/local/bin if running as root or sudo available
+if [ "$EUID" -eq 0 ]; then
+    cp "$BIN_DIR/ramordcast" /usr/local/bin/ramordcast
+elif sudo -n true 2>/dev/null; then
+    sudo cp "$BIN_DIR/ramordcast" /usr/local/bin/ramordcast 2>/dev/null || true
+fi
 
 # 3. Desktop Application Shortcut
 echo "[3/4] Creating desktop application shortcut..."

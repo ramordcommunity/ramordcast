@@ -104,8 +104,13 @@ class CastStreamer:
             self.stop_stream()
 
         doubletake_bin = shutil.which("doubletake")
-        if not doubletake_bin:
-            doubletake_bin = os.path.expanduser("~/.local/bin/doubletake")
+        if not doubletake_bin or not os.path.exists(doubletake_bin):
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            bundled_bin = os.path.join(base_dir, "bin", "doubletake")
+            if os.path.exists(bundled_bin):
+                doubletake_bin = bundled_bin
+            else:
+                doubletake_bin = os.path.expanduser("~/.local/bin/doubletake")
 
         cmd = [
             doubletake_bin,
