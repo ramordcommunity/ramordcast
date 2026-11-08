@@ -6,6 +6,22 @@
 
 ---
 
+## ⚡ Hızlı Kurulum / Quick Installation (Tek Komut)
+
+Herhangi bir Linux dağıtımında (Arch, CachyOS, Ubuntu, Debian, Fedora, Mint) Ramord Cast'i tüm bağımlılıkları ve masaüstü kısayoluyla birlikte tek komutla kurabilirsiniz:
+
+```bash
+git clone https://github.com/ramordcommunity/RamordCast.git
+cd RamordCast
+bash install.sh
+```
+
+Kurulum tamamlandıktan sonra:
+- **Başlat Menüsünden:** `Ramord Cast` simgesine tıklayarak açabilirsiniz.
+- **Terminalden:** Doğrudan `ramordcast` yazarak başlatabilirsiniz.
+
+---
+
 ## 🚀 Features / Özellikler
 
 - **Samsung Tizen Native Integration:** Designed and optimized specifically for Samsung Tizen OS Smart Monitors (e.g., M7 / LS43DM702, M8, Neo QLED, Smart TVs).
@@ -30,21 +46,32 @@
 
 ---
 
-## 📦 Installation & Requirements / Kurulum
+## 🛠️ Manuel Paket Kurulumu / Manual Package Requirements
 
-### Prerequisites (Arch / CachyOS / Fedora / Ubuntu):
+Eğer paketleri kendi paket yöneticinizle manuel kurmak isterseniz:
+
+### Arch Linux / CachyOS / Manjaro:
 ```bash
-# Arch / CachyOS
-sudo pacman -S python-gobject gtk4 libadwaita pipewire gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly dkms
+sudo pacman -S --needed python python-gobject python-requests gtk4 libadwaita pipewire gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly dkms
 ```
 
-### Running Ramord Cast:
+### Ubuntu / Debian / Linux Mint:
 ```bash
-python3 main.py
+sudo apt update
+sudo apt install -y python3 python3-gi python3-gi-cairo python3-requests gir1.2-gtk-4.0 gir1.2-adw-1 pipewire gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly dkms
 ```
 
-### Realtek RTL8822CE P2P Driver Installation (DKMS):
-If you have a Realtek wireless card without Wi-Fi Direct support on Linux:
+### Fedora:
+```bash
+sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pipewire gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free dkms
+```
+
+---
+
+## 📶 Realtek Wi-Fi Direct Sürücü Yaması (İsteğe Bağlı)
+
+Eğer bilgisayarınızda Realtek RTL8822CE veya RTL8821CE kablosuz kartı varsa ve Linux çekirdeği Wi-Fi Direct (P2P) özelliğini açmıyorsa, paket içindeki otomatik DKMS yükleyicisini çalıştırabilirsiniz:
+
 ```bash
 sudo bash driver/install_driver.sh
 ```
