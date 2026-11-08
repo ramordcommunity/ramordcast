@@ -51,12 +51,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self._build_ui()
         self._refresh_texts()
 
-        # Defer background network scanner until window is fully rendered on screen
-        GLib.timeout_add(250, self._start_initial_scan)
-
-    def _start_initial_scan(self):
+        # Start background scanner
         self.scanner.start_scanning()
-        return GLib.SOURCE_REMOVE
 
     def _apply_theme(self):
         """Applies RamordCommunity Dark Turquoise & Obsidian Luxury theme styling."""
@@ -360,6 +356,10 @@ class RamordCastWindow(Adw.ApplicationWindow):
 
         self.no_dev_row = Adw.ActionRow()
         self.device_list_box.append(self.no_dev_row)
+
+        # Pre-populate device list from cache immediately (0ms instant display)
+        for dev in self.scanner.get_cached_devices():
+            self._add_device_row(dev)
 
         # 7. Action Button
         btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)

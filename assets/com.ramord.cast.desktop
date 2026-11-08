@@ -13,5 +13,5 @@ Terminal=false
 Type=Application
 Categories=AudioVideo;Video;Network;Utility;
 Keywords=cast;mirror;airplay;workspace;samsung;display;
-StartupNotify=true
+StartupNotify=false
 StartupWMClass=com.ramord.cast
