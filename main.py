@@ -55,7 +55,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
     def _apply_theme(self):
         """Applies RamordCommunity Dark Turquoise & Obsidian Luxury theme styling."""
         css = b"""
-        window, .background {
+        window, window.background {
+            border-radius: 16px;
             background: radial-gradient(circle at 50% 25%, #102127 0%, #0b171b 45%, #071013 85%);
             color: #f3f8f8;
         }
@@ -64,6 +65,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
             background: rgba(7, 16, 19, 0.88);
             border-bottom: 1px solid rgba(20, 200, 178, 0.18);
             color: #f3f8f8;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
         }
 
         preferencesgroup > box {
@@ -207,10 +210,29 @@ class RamordCastWindow(Adw.ApplicationWindow):
         content_box.set_margin_end(16)
         clamp.set_child(content_box)
 
-        # 1. Status Banner
-        self.status_banner = Adw.StatusPage()
-        self.status_banner.set_icon_name("video-display-symbolic")
-        content_box.append(self.status_banner)
+        # 1. Fixed Status Banner Box (Stable dimensions, no shrinking or overlapping)
+        self.banner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.banner_box.set_halign(Gtk.Align.CENTER)
+        self.banner_box.set_margin_top(12)
+        self.banner_box.set_margin_bottom(12)
+        content_box.append(self.banner_box)
+
+        self.banner_icon = Gtk.Image.new_from_icon_name("video-display-symbolic")
+        self.banner_icon.set_pixel_size(72)
+        self.banner_icon.add_css_class("accent")
+        self.banner_box.append(self.banner_icon)
+
+        self.banner_title = Gtk.Label(label="Ramord Cast")
+        self.banner_title.add_css_class("title-1")
+        self.banner_box.append(self.banner_title)
+
+        self.banner_desc = Gtk.Label()
+        self.banner_desc.add_css_class("body")
+        self.banner_desc.add_css_class("dim-label")
+        self.banner_desc.set_wrap(True)
+        self.banner_desc.set_justify(Gtk.Justification.CENTER)
+        self.banner_desc.set_max_width_chars(50)
+        self.banner_box.append(self.banner_desc)
 
         # 2. Connection Protocol Selection (AirPlay vs Workspace vs Cast)
         self.proto_group = Adw.PreferencesGroup()
@@ -331,7 +353,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         lang = self.current_lang
 
         self.set_title(t("app_title", lang))
-        self.status_banner.set_title(t("app_title", lang))
+        self.banner_title.set_label(t("app_title", lang))
 
         self.lang_btn_label.set_label(LANGUAGES.get(lang, "English"))
 
@@ -340,12 +362,12 @@ class RamordCastWindow(Adw.ApplicationWindow):
         is_workspace = (curr_proto_idx == 1)
 
         if self.streamer.is_streaming:
-            self.status_banner.set_description(t("status_connected", lang))
+            self.banner_desc.set_label(t("status_connected", lang))
             self.action_btn.set_label(t("btn_stop", lang))
             self.action_btn.remove_css_class("suggested-action")
             self.action_btn.add_css_class("destructive-action")
         else:
-            self.status_banner.set_description(t("status_ready", lang))
+            self.banner_desc.set_label(t("status_ready", lang))
             self.action_btn.set_label(t("btn_start", lang))
             self.action_btn.remove_css_class("destructive-action")
             self.action_btn.add_css_class("suggested-action")
@@ -532,7 +554,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         dialog.present()
 
     def _on_manual_refresh(self, button):
-        self.status_banner.set_description(t("status_scanning", self.current_lang))
+        self.banner_desc.set_label(t("status_scanning", self.current_lang))
         GLib.idle_add(self._scan_and_update)
 
     def _scan_and_update(self):
@@ -540,7 +562,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         for d in devs:
             self._add_device_row(d)
         if not self.streamer.is_streaming:
-            self.status_banner.set_description(t("status_ready", self.current_lang))
+            self.banner_desc.set_label(t("status_ready", self.current_lang))
 
     def _on_device_found_bg(self, device):
         GLib.idle_add(self._add_device_row, device)
@@ -610,7 +632,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         if not target_dev:
             target_dev = DiscoveredDevice(name="Target Display", ip=target_ip, port=7000, model="SmartTV")
 
-        self.status_banner.set_description(t("status_connecting", self.current_lang))
+        self.banner_desc.set_label(t("status_connecting", self.current_lang))
 
         fps_val = 30 if self.fps_row.get_selected() == 0 else 60
 
@@ -639,7 +661,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         if success:
             self._refresh_texts()
         else:
-            self.status_banner.set_description(t("status_ready", self.current_lang))
+            self.banner_desc.set_label(t("status_ready", self.current_lang))
 
     def _on_stream_status_bg(self, is_streaming, target_dev):
         GLib.idle_add(self._refresh_texts)
