@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Ramord Cast - Ultra-Low-Latency Display Mirroring & Wireless Casting for Samsung Tizen & Linux
-(Apple AirPlay 2 & Google Cast / Chromecast, GTK4 + Libadwaita, Multi-Language Support)
+Ramord Cast - Display Mirroring & Wireless Virtual Second Monitor for Samsung Tizen & Linux
+(Apple AirPlay 2, Samsung Workspace RDP 2nd Screen, Google Cast, GTK4 + Libadwaita, 6 Languages)
 """
 
 import sys
@@ -17,14 +17,16 @@ from gi.repository import Gtk, Adw, GLib, Gio, Gdk
 from i18n import t, LANGUAGES
 from discovery import DeviceScanner, DiscoveredDevice
 from streamer import CastStreamer
+from display_mgr import DisplayManager
 
 class RamordCastWindow(Adw.ApplicationWindow):
     def __init__(self, app):
         super().__init__(application=app, title="Ramord Cast")
-        self.set_default_size(720, 720)
+        self.set_default_size(720, 780)
 
         self.current_lang = "en"
         self.scanner = DeviceScanner(on_device_found=self._on_device_found_bg)
+        self.display_mgr = DisplayManager()
         self.streamer = CastStreamer(on_status_change=self._on_stream_status_bg)
 
         self.discovered_devices = {}
@@ -92,7 +94,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.status_banner.set_icon_name("video-display-symbolic")
         content_box.append(self.status_banner)
 
-        # 2. Connection Protocol Selection (AirPlay vs Chromecast)
+        # 2. Connection Protocol Selection (AirPlay vs Workspace vs Cast)
         self.proto_group = Adw.PreferencesGroup()
         content_box.append(self.proto_group)
 
@@ -102,40 +104,78 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.proto_combo_row.connect("notify::selected", self._on_proto_changed)
         self.proto_group.add(self.proto_combo_row)
 
-        # 3. Performance & Quality Settings
+        # 3. Samsung Workspace Connection Details Card (IP, User, Pass, Port)
+        self.workspace_group = Adw.PreferencesGroup()
+        content_box.append(self.workspace_group)
+
+        self.ws_guide_row = Adw.ActionRow()
+        self.ws_guide_row.set_subtitle_lines(0)
+        self.workspace_group.add(self.ws_guide_row)
+
+        self.ws_ip_row = Adw.ActionRow()
+        copy_ip_btn = Gtk.Button.new_from_icon_name("edit-copy-symbolic")
+        copy_ip_btn.set_valign(Gtk.Align.CENTER)
+        copy_ip_btn.connect("clicked", self._on_copy_ip)
+        self.ws_ip_row.add_suffix(copy_ip_btn)
+        self.workspace_group.add(self.ws_ip_row)
+
+        self.ws_user_row = Adw.ActionRow()
+        self.workspace_group.add(self.ws_user_row)
+
+        self.ws_pass_row = Adw.ActionRow()
+        self.workspace_group.add(self.ws_pass_row)
+
+        self.ws_port_row = Adw.ActionRow()
+        self.workspace_group.add(self.ws_port_row)
+
+        # 4. Display Mode & 2nd Screen Position (Extend vs Clone, Right vs Left)
+        self.mode_group = Adw.PreferencesGroup()
+        content_box.append(self.mode_group)
+
+        self.mode_combo_row = Adw.ComboRow()
+        self.mode_model = Gtk.StringList()
+        self.mode_combo_row.set_model(self.mode_model)
+        self.mode_combo_row.connect("notify::selected", self._on_mode_changed)
+        self.mode_group.add(self.mode_combo_row)
+
+        self.pos_group = Adw.PreferencesGroup()
+        content_box.append(self.pos_group)
+
+        self.pos_combo_row = Adw.ComboRow()
+        self.pos_model = Gtk.StringList()
+        self.pos_combo_row.set_model(self.pos_model)
+        self.pos_combo_row.connect("notify::selected", self._on_position_changed)
+        self.pos_group.add(self.pos_combo_row)
+
+        # 5. Performance & Quality Settings (AirPlay)
         self.perf_group = Adw.PreferencesGroup()
         content_box.append(self.perf_group)
 
-        # FPS
         self.fps_row = Adw.ComboRow()
         self.fps_model = Gtk.StringList()
         self.fps_row.set_model(self.fps_model)
         self.perf_group.add(self.fps_row)
 
-        # Bitrate / Color Quality
         self.quality_row = Adw.ComboRow()
         self.quality_model = Gtk.StringList()
         self.quality_row.set_model(self.quality_model)
         self.perf_group.add(self.quality_row)
 
-        # Latency Target
         self.latency_row = Adw.ComboRow()
         self.latency_model = Gtk.StringList()
         self.latency_row.set_model(self.latency_model)
         self.perf_group.add(self.latency_row)
 
-        # Codec
         self.codec_row = Adw.ComboRow()
         self.codec_model = Gtk.StringList()
         self.codec_row.set_model(self.codec_model)
         self.perf_group.add(self.codec_row)
 
-        # Hardware Acceleration
         self.vaapi_switch_row = Adw.SwitchRow()
         self.vaapi_switch_row.set_active(True)
         self.perf_group.add(self.vaapi_switch_row)
 
-        # 4. Target Devices List
+        # 6. Target Devices List
         self.device_group = Adw.PreferencesGroup()
         content_box.append(self.device_group)
 
@@ -147,7 +187,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.no_dev_row = Adw.ActionRow()
         self.device_list_box.append(self.no_dev_row)
 
-        # 5. Action Button
+        # 7. Action Button
         btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
         btn_box.set_halign(Gtk.Align.CENTER)
         content_box.append(btn_box)
@@ -168,6 +208,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
 
         curr_proto_idx = self.proto_combo_row.get_selected()
         is_airplay = (curr_proto_idx == 0)
+        is_workspace = (curr_proto_idx == 1)
 
         if self.streamer.is_streaming:
             self.status_banner.set_description(t("status_connected", lang))
@@ -188,13 +229,54 @@ class RamordCastWindow(Adw.ApplicationWindow):
         while self.proto_model.get_n_items() > 0:
             self.proto_model.remove(0)
         self.proto_model.append(t("proto_airplay", lang))
+        self.proto_model.append(t("proto_workspace", lang))
         self.proto_model.append(t("proto_cast", lang))
-        self.proto_combo_row.set_selected(curr_proto_idx if curr_proto_idx < 2 else 0)
+        self.proto_combo_row.set_selected(curr_proto_idx if curr_proto_idx < 3 else 0)
 
-        # Performance Settings
-        self.perf_group.set_title(t("section_performance", lang))
+        # Samsung Workspace Card
+        self.workspace_group.set_title(t("workspace_info_title", lang))
+        self.ws_guide_row.set_title(t("workspace_guide", lang))
+        self.ws_ip_row.set_title(t("workspace_ip", lang))
+        self.ws_ip_row.set_subtitle(self.streamer.get_local_ip())
+        self.ws_user_row.set_title(t("workspace_user", lang))
+        self.ws_user_row.set_subtitle(self.streamer.get_current_user())
+        self.ws_pass_row.set_title(t("workspace_password", lang))
+        self.ws_pass_row.set_subtitle(self.streamer.get_current_password())
+        self.ws_port_row.set_title(t("workspace_port", lang))
+        self.ws_port_row.set_subtitle("3389")
+
+        # Display Mode (Mirror vs Extend)
+        curr_mode = self.mode_combo_row.get_selected()
+        self.mode_group.set_title(t("section_display_mode", lang))
+        self.mode_combo_row.set_title(t("section_display_mode", lang))
+        while self.mode_model.get_n_items() > 0:
+            self.mode_model.remove(0)
+        self.mode_model.append(t("mode_extend", lang))
+        self.mode_model.append(t("mode_clone", lang))
+        self.mode_combo_row.set_selected(curr_mode if curr_mode < 2 else 0)
+
+        # 2nd Display Position
+        curr_pos = self.pos_combo_row.get_selected()
+        self.pos_group.set_title(t("section_position", lang))
+        self.pos_combo_row.set_title(t("section_position", lang))
+        while self.pos_model.get_n_items() > 0:
+            self.pos_model.remove(0)
+        self.pos_model.append(t("pos_right", lang))
+        self.pos_model.append(t("pos_left", lang))
+        self.pos_model.append(t("pos_top", lang))
+        self.pos_model.append(t("pos_bottom", lang))
+        self.pos_combo_row.set_selected(curr_pos if curr_pos < 4 else 0)
+
+        # Visibility Rules
+        self.workspace_group.set_visible(is_workspace)
+        self.device_group.set_visible(not is_workspace)
         self.perf_group.set_visible(is_airplay)
 
+        is_extend = (self.mode_combo_row.get_selected() == 0) # 0 is Extend
+        self.mode_group.set_visible(is_workspace)
+        self.pos_group.set_visible(is_workspace and is_extend)
+
+        # Performance Settings
         curr_fps = self.fps_row.get_selected()
         self.fps_row.set_title(t("fps_label", lang))
         while self.fps_model.get_n_items() > 0:
@@ -239,7 +321,31 @@ class RamordCastWindow(Adw.ApplicationWindow):
     def _on_proto_changed(self, combo_row, pspec):
         idx = combo_row.get_selected()
         is_airplay = (idx == 0)
+        is_workspace = (idx == 1)
+
+        self.workspace_group.set_visible(is_workspace)
+        self.device_group.set_visible(not is_workspace)
         self.perf_group.set_visible(is_airplay)
+
+        is_extend = (self.mode_combo_row.get_selected() == 0)
+        self.mode_group.set_visible(is_workspace)
+        self.pos_group.set_visible(is_workspace and is_extend)
+
+    def _on_mode_changed(self, combo_row, pspec):
+        idx = self.proto_combo_row.get_selected()
+        is_workspace = (idx == 1)
+        is_extend = (combo_row.get_selected() == 0)
+        self.pos_group.set_visible(is_workspace and is_extend)
+
+    def _on_position_changed(self, combo_row, pspec):
+        pos_idx = combo_row.get_selected()
+        pos_keys = ["right", "left", "top", "bottom"]
+        chosen_pos = pos_keys[pos_idx] if pos_idx < len(pos_keys) else "right"
+        self.display_mgr.arrange_position("Virtual-1", chosen_pos)
+
+    def _on_copy_ip(self, button):
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        clipboard.set(self.ws_ip_row.get_subtitle())
 
     def _on_change_language(self, button, code, popover):
         self.current_lang = code
@@ -296,7 +402,24 @@ class RamordCastWindow(Adw.ApplicationWindow):
             return
 
         proto_idx = self.proto_combo_row.get_selected()
-        chosen_proto = "airplay" if proto_idx == 0 else "cast"
+        proto_map = ["airplay", "workspace", "cast"]
+        chosen_proto = proto_map[proto_idx] if proto_idx < len(proto_map) else "airplay"
+
+        mode_idx = self.mode_combo_row.get_selected()
+        chosen_mode = "extend" if mode_idx == 0 else "clone"
+
+        # Workspace Mode: Virtual Second Display
+        if chosen_proto == "workspace":
+            pos_idx = self.pos_combo_row.get_selected()
+            pos_keys = ["right", "left", "top", "bottom"]
+            chosen_pos = pos_keys[pos_idx] if pos_idx < len(pos_keys) else "right"
+
+            success = self.streamer.start_workspace(mode=chosen_mode)
+            if success:
+                if chosen_mode == "extend":
+                    threading.Timer(2.0, self.display_mgr.arrange_position, args=("Virtual-1", chosen_pos)).start()
+                self._refresh_texts()
+            return
 
         target_ip = self.selected_device_ip or "192.168.1.204"
         target_dev = self.discovered_devices.get(target_ip)
@@ -322,6 +445,7 @@ class RamordCastWindow(Adw.ApplicationWindow):
         success = self.streamer.start_stream(
             target_dev,
             protocol=chosen_proto,
+            mode=chosen_mode,
             fps=fps_val,
             latency_ms=lat_val,
             bitrate_kbps=bitrate_val,

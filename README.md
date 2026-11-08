@@ -1,6 +1,6 @@
 # Ramord Cast
 
-Ultra-low latency wireless screen mirroring for Smart TVs, monitors, and wireless displays on Linux.
+Ultra-low latency wireless screen mirroring and wireless virtual second-display tool for Smart TVs, monitors, and Linux.
 
 ---
 
@@ -10,7 +10,12 @@ Ultra-low latency wireless screen mirroring for Smart TVs, monitors, and wireles
    - Zero-PIN connection with saved credentials.
    - Hardware-accelerated 60 FPS streaming with sub-25ms ultra-low latency.
    - Dynamic bitrate adjustment and color fidelity.
-2. **Google Cast / Chromecast (Fallback):**
+2. **Samsung Workspace (PC on TV / Independent 2nd Display):**
+   - Virtual second screen (`1920x1080`) created independently over network RDP.
+   - Directional placement: Place your 2nd screen to the **Right**, **Left**, **Above**, or **Below** your main monitor.
+   - Direct mouse and keyboard control on Samsung Smart TV / Monitor without cables.
+   - Real-time connection details displayed (IP, Username, Password, Port: 3389).
+3. **Google Cast / Chromecast (Fallback):**
    - Standard Google Cast protocol for TV and wireless sink devices.
 
 ---
@@ -31,13 +36,19 @@ Launch Ramord Cast in either of two ways:
 - **Terminal:** Type `ramordcast` or run `python3 main.py` inside the project folder.
 - **Application Launcher:** Open your desktop menu (GNOME, KDE Plasma, etc.) and click **Ramord Cast**.
 
-### 3. How to Mirror Your Screen (Step-by-Step)
-1. Make sure your Linux PC and your TV / Monitor are connected to the same Wi-Fi / local network.
-2. Open **Ramord Cast**.
-3. Select your protocol (Apple AirPlay 2 is selected by default).
-4. Choose your target TV or monitor from the automatically scanned list.
-5. Click **Start Cast**.
-6. To end screen sharing, click **Stop Cast**.
+### 3. How to Use (Step-by-Step)
+
+#### Option A: Apple AirPlay 2 (Instant Mirroring)
+1. Ensure your PC and TV are connected to the same Wi-Fi / local network.
+2. Select **Apple AirPlay 2**.
+3. Choose your TV from the scanned list and click **Start Cast**.
+
+#### Option B: Samsung Workspace (Independent 2nd Screen with Credentials)
+1. Select **Samsung Workspace (PC on TV / 2nd Display)**.
+2. Choose **Extend (Independent 2nd Display)** and choose its position (**Right**, **Left**, **Above**, or **Below**).
+3. Click **Start Cast**.
+4. On your Samsung TV / Monitor: Go to **Menu > Connected Devices > Workspace > Windows PC**.
+5. Enter the **IP Address**, **Username**, and **Password** shown on the Ramord Cast screen and connect!
 
 ---
 
@@ -47,7 +58,7 @@ If you prefer to install dependencies manually:
 
 ### Arch Linux / CachyOS / Manjaro:
 ```bash
-sudo pacman -S --needed python python-gobject python-requests gtk4 libadwaita pipewire
+sudo pacman -S --needed python python-gobject python-requests gtk4 libadwaita pipewire krdp
 ```
 
 ### Ubuntu / Debian / Linux Mint:
