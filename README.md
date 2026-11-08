@@ -1,13 +1,24 @@
 # Ramord Cast
 
-Ultra-low latency wireless screen mirroring and second-monitor tool for Samsung Tizen Smart TVs, Smart Monitors, and AirPlay displays on Linux.
+Ultra-low latency wireless screen mirroring for Smart TVs, monitors, and wireless displays on Linux.
+
+---
+
+## Supported Connection Protocols
+
+1. **Apple AirPlay 2 (Recommended & Default):**
+   - Zero-PIN connection with saved credentials.
+   - Hardware-accelerated 60 FPS streaming with sub-25ms ultra-low latency.
+   - Dynamic bitrate adjustment and color fidelity.
+2. **Google Cast / Chromecast (Fallback):**
+   - Standard Google Cast protocol for TV and wireless sink devices.
 
 ---
 
 ## How to Run & Quick Installation
 
 ### 1. Automated Installation
-Run the installer to set up all system dependencies, the `ramordcast` command, and application launcher:
+Run the installer to set up dependencies, the `ramordcast` command, and application launcher:
 
 ```bash
 git clone https://github.com/ramordcommunity/ramordcast.git
@@ -16,42 +27,21 @@ bash install.sh
 ```
 
 ### 2. Launching the App
-After installation, you can launch Ramord Cast in either of two ways:
+Launch Ramord Cast in either of two ways:
 - **Terminal:** Type `ramordcast` or run `python3 main.py` inside the project folder.
 - **Application Launcher:** Open your desktop menu (GNOME, KDE Plasma, etc.) and click **Ramord Cast**.
 
 ### 3. How to Mirror Your Screen (Step-by-Step)
-1. Make sure your Linux PC and your Samsung TV / Monitor are on the same Wi-Fi / LAN network.
-2. Launch **Ramord Cast**.
-3. **Apple AirPlay 2** is selected as the default protocol (providing 60 FPS hardware-accelerated streaming and sub-25ms latency).
-4. Select your target TV or monitor from the discovered devices list (or let the auto-discovery select it).
+1. Make sure your Linux PC and your TV / Monitor are connected to the same Wi-Fi / local network.
+2. Open **Ramord Cast**.
+3. Select your protocol (Apple AirPlay 2 is selected by default).
+4. Choose your target TV or monitor from the automatically scanned list.
 5. Click **Start Cast**.
-6. To stop sharing at any time, click **Stop Cast**.
+6. To end screen sharing, click **Stop Cast**.
 
 ---
 
-## Features
-
-- **Apple AirPlay 2 (Default):** Zero-PIN hardware-accelerated 60 FPS streaming with sub-25ms latency.
-- **Samsung Workspace (PC on TV / RDP):** Virtual display and keyboard/mouse integration over TLS RDP.
-- **Wi-Fi Direct / Miracast (WFD):** Hardware P2P display transmission.
-- **Hardware Acceleration:** Native VA-API / Vulkan hardware encoding (AMD Radeon, Intel QuickSync, NVIDIA NVENC) for smooth 60 FPS playback.
-- **Flexible Display Modes:**
-  - Clone Display (Mirroring)
-  - Extend Display (Independent secondary display)
-  - Single Window Mirroring
-- **Multi-Monitor Alignment:** Directional placement (Right, Left, Above, Below) dynamically handled via Wayland/KScreen.
-- **Multi-Language Interface (6 Languages):**
-  - English (`en`) - Default
-  - Turkish (`tr`)
-  - German (`de`)
-  - Spanish (`es`)
-  - French (`fr`)
-  - Italian (`it`)
-
----
-
-## Manual Package Installation
+## Dependencies (Installed Automatically)
 
 If you prefer to install dependencies manually:
 
@@ -75,4 +65,4 @@ sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pip
 
 ## License
 
-GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details. Free and open source software; anyone is free to use, modify, study, and distribute this software.
+GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details. Free and open source software; anyone is free to use, study, modify, and distribute this software.
