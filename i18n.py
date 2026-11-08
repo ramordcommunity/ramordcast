@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Ramord Cast Multilingual Localization Module (6 Languages: tr, en, de, es, fr, it)
-Includes AirPlay 2, Google Cast, and Samsung Workspace 2nd Virtual Display.
+Includes AirPlay 2, Google Cast, Samsung Workspace, and Developer Note.
 """
 
 LANGUAGES = {
@@ -314,7 +314,47 @@ TRANSLATIONS = {   'app_title': {   'tr': 'Ramord Cast',
                            'de': 'Suchen...',
                            'es': 'Buscando...',
                            'fr': 'Recherche...',
-                           'it': 'Ricerca...'}}
+                           'it': 'Ricerca...'},
+    'author_note_title': {   'tr': 'Geliştirici Notu (Multi View)',
+                             'en': 'Developer Note (Multi View)',
+                             'de': 'Entwicklerhinweis (Multi View)',
+                             'es': 'Nota del Desarrollador (Multi View)',
+                             'fr': 'Note du Développeur (Multi View)',
+                             'it': 'Nota dello Sviluppatore (Multi View)'},
+    'author_note_text': {   'tr': 'Bu projeyi geliştirmemdeki asıl amaç televizyondaki Multi View özelliğini '
+                                  'kullanarak çift ekranı yan yana tek bir monitörde kablosuz olarak gösterebilmekti. '
+                                  'Ancak Samsung Tizen donanım ve protokol kısıtlamaları nedeniyle bunu tam olarak '
+                                  'başaramadım. Bu yönde projeyi ileriye taşıyacak açık kaynak geliştiricilere '
+                                  'şimdiden başarılar dilerim! İletişim: ramordhelp@gmail.com',
+                            'en': 'The main goal behind creating this project was to display a dual-screen setup '
+                                  "side-by-side on a single monitor using Samsung's Multi View feature wirelessly. "
+                                  "However, due to Samsung Tizen hardware and protocol constraints, I wasn't able to "
+                                  'achieve this fully. I wish the best of luck to developers who want to take this '
+                                  'forward! Contact: ramordhelp@gmail.com',
+                            'de': 'Das Hauptziel bei der Entwicklung dieses Projekts war es, mithilfe der Multi '
+                                  'View-Funktion von Samsung ein Dual-Screen-Setup kabellos nebeneinander auf einem '
+                                  'einzigen Monitor anzuzeigen. Aufgrund von Einschränkungen bei Samsung '
+                                  'Tizen-Hardware und -Protokollen konnte ich dies jedoch nicht vollständig erreichen. '
+                                  'Ich wünsche Entwicklern, die dies vorantreiben möchten, viel Erfolg! Kontakt: '
+                                  'ramordhelp@gmail.com',
+                            'es': 'El objetivo principal detrás de la creación de este proyecto era mostrar una '
+                                  'configuración de doble pantalla una al lado de la otra en un solo monitor '
+                                  'utilizando la función Multi View de Samsung de forma inalámbrica. Sin embargo, '
+                                  'debido a las restricciones de hardware y protocolo de Samsung Tizen, no pude '
+                                  'lograrlo por completo. ¡Les deseo mucho éxito a los desarrolladores que quieran '
+                                  'llevar esto adelante! Contacto: ramordhelp@gmail.com',
+                            'fr': "L'objectif principal derrière la création de ce projet était d'afficher une "
+                                  'configuration à double écran côte à côte sur un seul moniteur en utilisant la '
+                                  'fonctionnalité Multi View de Samsung sans fil. Cependant, en raison des contraintes '
+                                  "matérielles et protocolaires de Samsung Tizen, je n'ai pas pu y parvenir "
+                                  'pleinement. Je souhaite bonne chance aux développeurs qui souhaitent faire avancer '
+                                  'cela! Contact: ramordhelp@gmail.com',
+                            'it': "L'obiettivo principale dietro la creazione di questo progetto era mostrare una "
+                                  'configurazione a doppio schermo affiancata su un singolo monitor utilizzando la '
+                                  'funzione Multi View di Samsung in modalità wireless. Tuttavia, a causa dei vincoli '
+                                  'di hardware e protocollo di Samsung Tizen, non sono riuscito a raggiungere '
+                                  'completamente questo obiettivo. Auguro buona fortuna agli sviluppatori che vogliono '
+                                  'portare avanti questo progetto! Contatto: ramordhelp@gmail.com'}}
 
 
 def t(key, lang="en"):

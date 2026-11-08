@@ -74,6 +74,23 @@ sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pip
 
 ---
 
+## Developer Note & Purpose
+
+The initial and primary inspiration behind developing Ramord Cast was to display a wireless dual-screen setup side-by-side on a single Samsung Smart Monitor using **Samsung Multi View** (Source 1: Active Game/PC on HDMI, Source 2: Wireless Linux Display). 
+
+However, due to Samsung Tizen OS hardware scaler limitations and proprietary Wi-Fi Display protocol boundaries, achieving seamless automated Multi View pairing proved exceptionally challenging and was not fully achieved. 
+
+The project is fully open-sourced for developers, reverse engineers, and the open-source community to take this research forward. Best of luck to anyone continuing this endeavor!
+
+---
+
+## Contact & Support
+
+For questions, feedback, or collaborations, feel free to reach out:
+- **Email:** `ramordhelp@gmail.com`
+
+---
+
 ## License
 
 GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details. Free and open source software; anyone is free to use, study, modify, and distribute this software.

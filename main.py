@@ -220,11 +220,10 @@ class RamordCastWindow(Adw.ApplicationWindow):
         icon_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "ramordcast.png")
         if os.path.exists(icon_file):
             self.banner_icon = Gtk.Image.new_from_file(icon_file)
-            self.banner_icon.set_pixel_size(84)
+            self.banner_icon.set_pixel_size(108)
         else:
             self.banner_icon = Gtk.Image.new_from_icon_name("video-display-symbolic")
-            self.banner_icon.set_pixel_size(72)
-            self.banner_icon.add_css_class("accent")
+            self.banner_icon.set_pixel_size(84)
         self.banner_box.append(self.banner_icon)
 
         self.banner_title = Gtk.Label(label="Ramord Cast")
@@ -368,6 +367,16 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.action_btn.connect("clicked", self._on_toggle_streaming)
         btn_box.append(self.action_btn)
 
+        # 8. Developer Note Card (Multi View story & contact)
+        self.note_group = Adw.PreferencesGroup()
+        content_box.append(self.note_group)
+
+        self.note_row = Adw.ActionRow()
+        self.note_row.set_subtitle_lines(0)
+        icon_note = Gtk.Image.new_from_icon_name("help-about-symbolic")
+        self.note_row.add_prefix(icon_note)
+        self.note_group.add(self.note_row)
+
     def _refresh_texts(self):
         """Refreshes all texts across 6 languages."""
         lang = self.current_lang
@@ -491,6 +500,11 @@ class RamordCastWindow(Adw.ApplicationWindow):
         # Target Devices
         self.device_group.set_title(t("section_targets", lang))
         self.no_dev_row.set_title(t("no_devices", lang))
+
+        # Developer Note
+        self.note_group.set_title(t("author_note_title", lang))
+        self.note_row.set_title(t("author_note_title", lang))
+        self.note_row.set_subtitle(t("author_note_text", lang))
 
     def _on_proto_changed(self, combo_row, pspec):
         idx = combo_row.get_selected()
