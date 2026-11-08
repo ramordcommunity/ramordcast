@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Ramord Cast
+Comment=Ultra Low-Latency Samsung & Tizen Screen Mirror
+Comment[tr]=Ultra Düşük Gecikmeli Samsung & Tizen Ekran Yansıtıcı
+Comment[en]=Ultra Low-Latency Samsung & Tizen Screen Mirror
+Comment[de]=Ultra-Low-Latency Samsung & Tizen Bildschirmspiegelung
+Comment[es]=Espejo de Pantalla Samsung & Tizen de Ultra Baja Latencia
+Comment[fr]=Miroir d'Écran Samsung & Tizen à Ultra Faible Latence
+Comment[it]=Duplicazione Schermo Samsung & Tizen ad Ultra Bassa Latenza
+Exec=ramordcast
+Icon=video-display
+Terminal=false
+Type=Application
+Categories=AudioVideo;Video;Network;Utility;
+Keywords=cast;mirror;samsung;tizen;display;screen;
+StartupNotify=true
