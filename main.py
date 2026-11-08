@@ -217,9 +217,14 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.banner_box.set_margin_bottom(12)
         content_box.append(self.banner_box)
 
-        self.banner_icon = Gtk.Image.new_from_icon_name("video-display-symbolic")
-        self.banner_icon.set_pixel_size(72)
-        self.banner_icon.add_css_class("accent")
+        icon_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "ramordcast.png")
+        if os.path.exists(icon_file):
+            self.banner_icon = Gtk.Image.new_from_file(icon_file)
+            self.banner_icon.set_pixel_size(84)
+        else:
+            self.banner_icon = Gtk.Image.new_from_icon_name("video-display-symbolic")
+            self.banner_icon.set_pixel_size(72)
+            self.banner_icon.add_css_class("accent")
         self.banner_box.append(self.banner_icon)
 
         self.banner_title = Gtk.Label(label="Ramord Cast")
@@ -324,9 +329,24 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.vaapi_switch_row.set_active(True)
         self.perf_group.add(self.vaapi_switch_row)
 
-        # 6. Target Devices List
+        # 6. Target Devices List (with animated Spinner & Scanning status)
         self.device_group = Adw.PreferencesGroup()
         content_box.append(self.device_group)
+
+        # Header suffix for device group: scanning spinner + badge
+        scan_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        scan_box.set_valign(Gtk.Align.CENTER)
+
+        self.scan_spinner = Gtk.Spinner()
+        self.scan_spinner.set_size_request(16, 16)
+        scan_box.append(self.scan_spinner)
+
+        self.scan_badge = Gtk.Label()
+        self.scan_badge.add_css_class("caption")
+        self.scan_badge.add_css_class("dim-label")
+        scan_box.append(self.scan_badge)
+
+        self.device_group.set_header_suffix(scan_box)
 
         self.device_list_box = Gtk.ListBox()
         self.device_list_box.add_css_class("boxed-list")
@@ -555,12 +575,25 @@ class RamordCastWindow(Adw.ApplicationWindow):
 
     def _on_manual_refresh(self, button):
         self.banner_desc.set_label(t("status_scanning", self.current_lang))
-        GLib.idle_add(self._scan_and_update)
+        self.scan_badge.set_label(t("searching_badge", self.current_lang))
+        self.scan_spinner.start()
+        self.scan_spinner.set_visible(True)
+        self.scan_badge.set_visible(True)
+        self.refresh_btn.set_sensitive(False)
 
-    def _scan_and_update(self):
-        devs = self.scanner.scan_once()
+        def bg_scan():
+            devs = self.scanner.scan_once()
+            GLib.idle_add(self._on_scan_finished, devs)
+
+        threading.Thread(target=bg_scan, daemon=True).start()
+
+    def _on_scan_finished(self, devs):
         for d in devs:
             self._add_device_row(d)
+        self.scan_spinner.stop()
+        self.scan_spinner.set_visible(False)
+        self.scan_badge.set_visible(False)
+        self.refresh_btn.set_sensitive(True)
         if not self.streamer.is_streaming:
             self.banner_desc.set_label(t("status_ready", self.current_lang))
 

@@ -308,7 +308,13 @@ TRANSLATIONS = {   'app_title': {   'tr': 'Ramord Cast',
                                'de': 'Sprache',
                                'es': 'Idioma',
                                'fr': 'Langue',
-                               'it': 'Lingua'}}
+                               'it': 'Lingua'},
+    'searching_badge': {   'tr': 'Taranıyor...',
+                           'en': 'Scanning...',
+                           'de': 'Suchen...',
+                           'es': 'Buscando...',
+                           'fr': 'Recherche...',
+                           'it': 'Ricerca...'}}
 
 
 def t(key, lang="en"):
