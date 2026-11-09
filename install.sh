@@ -64,8 +64,35 @@ elif sudo -n true 2>/dev/null; then
     sudo cp "$BIN_DIR/ramordcast" /usr/local/bin/ramordcast 2>/dev/null || true
 fi
 
-# 3. Desktop Application Shortcut
-echo "[3/4] Creating desktop application shortcut..."
+# 3. Universal Icon Deployment across all themes & resolutions
+echo "[3/4] Installing application icon to all user themes..."
+ICON_DIR="$HOME/.local/share/icons"
+CAST_ICON="$SCRIPT_DIR/assets/ramordcast.png"
+
+# Standard hicolor scalable & pngs
+mkdir -p "$ICON_DIR/hicolor/scalable/apps" "$ICON_DIR/hicolor/256x256/apps"
+cp -f "$CAST_ICON" "$ICON_DIR/hicolor/scalable/apps/ramordcast.png"
+cp -f "$CAST_ICON" "$ICON_DIR/hicolor/256x256/apps/ramordcast.png"
+
+# Deploy to all theme trees
+if [ -d "$ICON_DIR" ]; then
+    for tdir in "$ICON_DIR"/*; do
+        if [ -d "$tdir" ]; then
+            for app_dir in $(find "$tdir" -type d -name "apps" 2>/dev/null); do
+                cp -f "$CAST_ICON" "$app_dir/ramordcast.png" 2>/dev/null || true
+            done
+            if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+                gtk-update-icon-cache -f -t "$tdir" >/dev/null 2>&1 || true
+            fi
+        fi
+    done
+fi
+
+mkdir -p "$HOME/.local/share/pixmaps"
+cp -f "$CAST_ICON" "$HOME/.local/share/pixmaps/ramordcast.png"
+
+# 4. Desktop Application Shortcut
+echo "[4/4] Creating desktop application shortcut..."
 APPLICATIONS_DIR="$HOME/.local/share/applications"
 mkdir -p "$APPLICATIONS_DIR"
 
@@ -80,17 +107,22 @@ Comment[es]=Espejo de Pantalla Samsung & Tizen de Ultra Baja Latencia
 Comment[fr]=Miroir d'Écran Samsung & Tizen à Ultra Faible Latence
 Comment[it]=Duplicazione Schermo Samsung & Tizen ad Ultra Bassa Latenza
 Exec=ramordcast
-Icon=video-display
+Icon=ramordcast
 Terminal=false
 Type=Application
 Categories=AudioVideo;Video;Network;Utility;
 Keywords=cast;mirror;samsung;tizen;display;screen;
 StartupNotify=true
+StartupWMClass=com.ramord.cast
 EOF
 
 chmod +x "$APPLICATIONS_DIR/com.ramord.cast.desktop"
 if command -v update-desktop-database >/dev/null 2>&1; then
     update-desktop-database "$APPLICATIONS_DIR" 2>/dev/null || true
+fi
+
+if command -v kbuildsycoca6 >/dev/null 2>&1; then
+    kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
 fi
 
 echo ""
