@@ -14,7 +14,7 @@ echo "[1/4] Checking and installing system dependencies..."
 install_packages() {
     if command -v pacman >/dev/null 2>&1; then
         echo "--> Detected Arch Linux / CachyOS / Manjaro."
-        sudo pacman -S --needed --noconfirm \
+        sudo -A pacman -S --needed --noconfirm \
             python \
             python-gobject \
             python-requests \
@@ -23,8 +23,8 @@ install_packages() {
             pipewire
     elif command -v apt-get >/dev/null 2>&1; then
         echo "--> Detected Ubuntu / Debian / Linux Mint."
-        sudo apt-get update
-        sudo apt-get install -y \
+        sudo -A apt-get update
+        sudo -A apt-get install -y \
             python3 \
             python3-gi \
             python3-requests \
@@ -33,7 +33,7 @@ install_packages() {
             pipewire
     elif command -v dnf >/dev/null 2>&1; then
         echo "--> Detected Fedora / RHEL."
-        sudo dnf install -y \
+        sudo -A dnf install -y \
             python3 \
             python3-gobject \
             python3-requests \
