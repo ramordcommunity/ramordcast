@@ -12,36 +12,31 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "[1/4] Checking and installing system dependencies..."
 
 install_packages() {
+    # Check if essential packages are already satisfied before attempting any sudo calls
+    if python3 -c "import gi; gi.require_version('Gtk', '4.0'); gi.require_version('Adw', '1'); from gi.repository import Gtk, Adw; import requests" >/dev/null 2>&1; then
+        echo "--> All required dependencies already satisfied. Skipping package installation."
+        return 0
+    fi
+
+    # Determine sudo command (use -A if askpass is configured, or skip if non-interactive)
+    SUDO_CMD="sudo"
+    if [ -n "${SUDO_ASKPASS:-}" ]; then
+        SUDO_CMD="sudo -A"
+    elif [ ! -t 0 ]; then
+        echo "[!] Running in non-interactive mode. Skipping sudo dependency install."
+        return 0
+    fi
+
     if command -v pacman >/dev/null 2>&1; then
         echo "--> Detected Arch Linux / CachyOS / Manjaro."
-        sudo -A pacman -S --needed --noconfirm \
-            python \
-            python-gobject \
-            python-requests \
-            gtk4 \
-            libadwaita \
-            pipewire
+        ${SUDO_CMD} pacman -S --needed --noconfirm             python python-gobject python-requests gtk4 libadwaita pipewire 2>/dev/null || true
     elif command -v apt-get >/dev/null 2>&1; then
         echo "--> Detected Ubuntu / Debian / Linux Mint."
-        sudo -A apt-get update
-        sudo -A apt-get install -y \
-            python3 \
-            python3-gi \
-            python3-requests \
-            gir1.2-gtk-4.0 \
-            gir1.2-adw-1 \
-            pipewire
+        ${SUDO_CMD} apt-get update 2>/dev/null || true
+        ${SUDO_CMD} apt-get install -y python3 python3-gi python3-requests gir1.2-gtk-4.0 gir1.2-adw-1 pipewire 2>/dev/null || true
     elif command -v dnf >/dev/null 2>&1; then
         echo "--> Detected Fedora / RHEL."
-        sudo -A dnf install -y \
-            python3 \
-            python3-gobject \
-            python3-requests \
-            gtk4 \
-            libadwaita \
-            pipewire
-    else
-        echo "[!] Package manager not recognized. Please install Python, GTK4, Libadwaita, and PipeWire manually."
+        ${SUDO_CMD} dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pipewire 2>/dev/null || true
     fi
 }
 
