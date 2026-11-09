@@ -354,7 +354,32 @@ TRANSLATIONS = {   'app_title': {   'tr': 'Ramord Cast',
                                   'funzione Multi View di Samsung in modalità wireless. Tuttavia, a causa dei vincoli '
                                   'di hardware e protocollo di Samsung Tizen, non sono riuscito a raggiungere '
                                   'completamente questo obiettivo. Auguro buona fortuna agli sviluppatori che vogliono '
-                                  'portare avanti questo progetto! Contatto: ramordhelp@gmail.com'}}
+                                  'portare avanti questo progetto! Contatto: ramordhelp@gmail.com'},
+    "theme_auto": {
+        "tr": "Sistem Teması",
+        "en": "System Theme",
+        "de": "Systemthema",
+        "es": "Tema del Sistema",
+        "fr": "Thème du Système",
+        "it": "Tema di Sistema",
+    },
+    "theme_day": {
+        "tr": "Gündüz Modu",
+        "en": "Day Mode",
+        "de": "Tagmodus",
+        "es": "Modo Día",
+        "fr": "Mode Jour",
+        "it": "Modalità Giorno",
+    },
+    "theme_night": {
+        "tr": "Gece Modu",
+        "en": "Night Mode",
+        "de": "Nachtmodus",
+        "es": "Modo Noche",
+        "fr": "Mode Nuit",
+        "it": "Modalità Notte",
+    },
+}
 
 
 def t(key, lang="en"):

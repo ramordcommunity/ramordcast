@@ -47,106 +47,152 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.discovered_devices = {}
         self.selected_device_ip = None
 
-        self._apply_theme()
+        self.theme_mode = "auto"
+        self.css_provider = None
         self._build_ui()
+        self._apply_theme()
         self._refresh_texts()
 
         # Start background scanner
         self.scanner.start_scanning()
 
-    def _apply_theme(self):
-        """Applies RamordCommunity Dark Turquoise & Obsidian Luxury theme styling."""
-        css = b"""
-        window, window.background {
-            border-radius: 16px;
-            background: radial-gradient(circle at 50% 25%, #102127 0%, #0b171b 45%, #071013 85%);
-            color: #f3f8f8;
-        }
+    def _detect_system_theme(self) -> str:
+        try:
+            sm = Adw.StyleManager.get_default()
+            return "night" if sm.get_dark() else "day"
+        except Exception:
+            return "night"
 
-        headerbar {
-            background: rgba(7, 16, 19, 0.88);
-            border-bottom: 1px solid rgba(20, 200, 178, 0.18);
-            color: #f3f8f8;
+    def _resolve_theme_key(self) -> str:
+        if self.theme_mode in ("day", "night"):
+            return self.theme_mode
+        return self._detect_system_theme()
+
+    def _apply_theme(self):
+        """Applies solid Day (#F4F1EA/#EFECE6/#2B2A27/#1A3328) or Night (#080C0A/#101613/#E8E4DA/#589E7B) theme."""
+        active_key = self._resolve_theme_key()
+        is_day = (active_key == "day")
+
+        if is_day:
+            bg = "#F4F1EA"
+            card = "#EFECE6"
+            card_border = "rgba(26, 51, 40, 0.15)"
+            text = "#2B2A27"
+            dim = "#6B6862"
+            accent = "#1A3328"
+            accent_hover = "#284e3e"
+            accent_text = "#F4F1EA"
+            header_bg = "#EAE5DC"
+        else:
+            bg = "#080C0A"
+            card = "#101613"
+            card_border = "rgba(88, 158, 123, 0.20)"
+            text = "#E8E4DA"
+            dim = "#8A948E"
+            accent = "#589E7B"
+            accent_hover = "#6db893"
+            accent_text = "#080C0A"
+            header_bg = "#0d1310"
+
+        css_text = f"""
+        window, window.background {{
+            border-radius: 16px;
+            background: {bg};
+            color: {text};
+        }}
+
+        headerbar {{
+            background: {header_bg};
+            border-bottom: 1px solid {card_border};
+            color: {text};
             border-top-left-radius: 16px;
             border-top-right-radius: 16px;
-        }
+        }}
 
-        preferencesgroup > box {
-            background: rgba(11, 23, 27, 0.65);
-            border: 1px solid rgba(20, 200, 178, 0.14);
+        preferencesgroup > box {{
+            background: {card};
+            border: 1px solid {card_border};
             border-radius: 14px;
             padding: 4px;
-        }
+            color: {text};
+        }}
 
-        .boxed-list {
-            background: rgba(11, 23, 27, 0.65);
-            border: 1px solid rgba(20, 200, 178, 0.14);
+        .boxed-list {{
+            background: {card};
+            border: 1px solid {card_border};
             border-radius: 14px;
-        }
+            color: {text};
+        }}
 
-        .boxed-list row {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+        .boxed-list row {{
+            border-bottom: 1px solid {card_border};
+            color: {text};
+        }}
 
-        .suggested-action {
-            background: linear-gradient(135deg, #14c8b2 0%, #005a48 100%);
-            color: #071013;
+        .suggested-action {{
+            background: {accent};
+            color: {accent_text};
             font-weight: 700;
             border: none;
-            box-shadow: 0 4px 15px rgba(20, 200, 178, 0.25);
-        }
+        }}
 
-        .suggested-action:hover {
-            background: linear-gradient(135deg, #18e0c8 0%, #006e58 100%);
-            box-shadow: 0 4px 20px rgba(20, 200, 178, 0.4);
-        }
+        .suggested-action:hover {{
+            background: {accent_hover};
+        }}
 
-        .destructive-action {
-            background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+        .destructive-action {{
+            background: #ef4444;
             color: #ffffff;
             font-weight: 700;
             border: none;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
-        }
+        }}
 
         /* Modern Rounded Dropdowns & Popovers */
-        popover contents, popover .view, popover listview {
-            background-color: #0b171b;
-            color: #f3f8f8;
+        popover contents, popover .view, popover listview {{
+            background-color: {card};
+            color: {text};
             border-radius: 12px;
-            border: 1px solid rgba(20, 200, 178, 0.25);
+            border: 1px solid {card_border};
             padding: 6px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-        }
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }}
 
-        popover listview row {
+        popover listview row {{
             padding: 10px 14px;
             border-radius: 8px;
             margin: 2px 0;
             min-height: 38px;
-        }
+            color: {text};
+        }}
 
-        popover listview row:selected, popover listview row:hover {
-            background: rgba(20, 200, 178, 0.18);
-            color: #14c8b2;
-        }
+        popover listview row:selected, popover listview row:hover {{
+            background: {card_border};
+            color: {accent};
+        }}
 
         /* Fixed Banner Dimensions */
-        statuspage > box {
+        statuspage > box {{
             min-height: 120px;
-        }
+        }}
 
-        statuspage .icon {
+        statuspage .icon {{
             -gtk-icon-size: 64px;
             min-width: 64px;
             min-height: 64px;
-        }
+        }}
         """
-        provider = Gtk.CssProvider()
-        provider.load_from_data(css)
+
+        if self.css_provider is not None:
+            Gtk.StyleContext.remove_provider_for_display(
+                Gdk.Display.get_default(),
+                self.css_provider
+            )
+
+        self.css_provider = Gtk.CssProvider()
+        self.css_provider.load_from_data(css_text.encode('utf-8'))
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
-            provider,
+            self.css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
@@ -187,6 +233,35 @@ class RamordCastWindow(Adw.ApplicationWindow):
         lang_popover.set_child(lang_box)
         self.lang_btn.set_popover(lang_popover)
         self.header_bar.pack_start(self.lang_btn)
+
+        # Theme Switcher (Auto / Day / Night)
+        self.theme_btn = Gtk.MenuButton()
+        self.theme_btn.add_css_class("flat")
+        self.theme_btn.set_tooltip_text("Theme / Tema")
+        theme_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        theme_icon = Gtk.Image.new_from_icon_name("display-brightness-symbolic")
+        self.theme_btn_label = Gtk.Label(label=t(f"theme_{self.theme_mode}", self.current_lang))
+        self.theme_btn_label.add_css_class("heading")
+        theme_btn_box.append(theme_icon)
+        theme_btn_box.append(self.theme_btn_label)
+        self.theme_btn.set_child(theme_btn_box)
+
+        theme_popover = Gtk.Popover()
+        theme_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        theme_box.set_margin_top(8)
+        theme_box.set_margin_bottom(8)
+        theme_box.set_margin_start(8)
+        theme_box.set_margin_end(8)
+
+        for m_key in ("auto", "day", "night"):
+            m_btn = Gtk.Button(label=t(f"theme_{m_key}", self.current_lang))
+            m_btn.add_css_class("flat")
+            m_btn.connect("clicked", self._on_change_theme, m_key, theme_popover)
+            theme_box.append(m_btn)
+
+        theme_popover.set_child(theme_box)
+        self.theme_btn.set_popover(theme_popover)
+        self.header_bar.pack_start(self.theme_btn)
 
         # Refresh Button
         self.refresh_btn = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
@@ -391,6 +466,8 @@ class RamordCastWindow(Adw.ApplicationWindow):
         self.banner_title.set_label(t("app_title", lang))
 
         self.lang_btn_label.set_label(LANGUAGES.get(lang, "English"))
+        if hasattr(self, "theme_btn_label"):
+            self.theme_btn_label.set_label(t(f"theme_{self.theme_mode}", lang))
 
         curr_proto_idx = self.proto_combo_row.get_selected()
         is_airplay = (curr_proto_idx == 0)
@@ -544,6 +621,12 @@ class RamordCastWindow(Adw.ApplicationWindow):
     def _on_change_language(self, button, code, popover):
         self.current_lang = code
         popover.popdown()
+        self._refresh_texts()
+
+    def _on_change_theme(self, button, mode, popover):
+        self.theme_mode = mode
+        popover.popdown()
+        self._apply_theme()
         self._refresh_texts()
 
     def _on_open_edit_dialog(self, button):
