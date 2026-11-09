@@ -74,6 +74,37 @@ sudo dnf install -y python3 python3-gobject python3-requests gtk4 libadwaita pip
 
 ---
 
+## Türkçe Açıklama
+
+**Ramord Cast**, Linux masaüstünüzü Smart TV'lere, monitörlere veya harici ekranlara ultra düşük gecikmeyle kablosuz yansıtmanızı ve bağımsız sanal ikinci ekran oluşturmanızı sağlayan açık kaynaklı bir uygulamadır.
+
+### Desteklenen Protokoller ve Özellikler
+
+1. **Apple AirPlay 2 (Önerilen ve Varsayılan):**
+   - Kayıtlı kimlik bilgileriyle PIN sormadan anında otomatik bağlantı.
+   - Donanım hızlandırmalı 60 FPS yayın ve 25ms altı ultra düşük gecikme süresi.
+   - Renk ve dinamik bit hızı doğruluğu.
+
+2. **Samsung Workspace (TV'de PC / Bağımsız 2. Sanal Ekran):**
+   - Ağ üzerinden RDP ile oluşturulan bağımsız Full HD (`1920x1080`) sanal ikinci ekran.
+   - Yön seçimi: İkinci ekranınızı ana monitörünüzün **Sağına**, **Soluna**, **Üstüne** veya **Altına** yerleştirin.
+   - Kabloya ihtiyaç duymadan Samsung Smart TV veya monitörünüzün kumanda, fare ve klavyesiyle doğrudan kontrol.
+
+3. **Google Cast / Chromecast (Yedek Protokol):**
+   - Chromecast ve Google Cast destekli TV cihazları için standart yansıtma.
+
+### Kurulum ve Çalıştırma
+
+```bash
+git clone https://github.com/ramordcommunity/ramordcast.git
+cd ramordcast
+bash install.sh
+```
+
+Terminalden `ramordcast` yazarak veya masaüstü uygulama menünüzden doğrudan başlatabilirsiniz.
+
+---
+
 ## Developer Note & Purpose
 
 The initial and primary inspiration behind developing Ramord Cast was to display a wireless dual-screen setup side-by-side on a single Samsung Smart Monitor using **Samsung Multi View** (Source 1: Active Game/PC on HDMI, Source 2: Wireless Linux Display). 
